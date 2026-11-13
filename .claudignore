@@ -1,0 +1,9 @@
+# Ignore logs, builds, and large data files
+*.log
+node_modules/
+build/
+dist/
+*.db
+*.sqlite
+data/
+.git/
