@@ -1,8 +1,8 @@
-# CONTINUE.md
+# **OnStage Sheet‑Music Stand for Roland Fantom‑G8** 
 
 ## 1. Project Overview
 
-**OnStage Sheet‑Music Stand for Roland Fantom‑G8** – a 3‑D‑printed stand that can be assembled in multiple configurations (single‑riser, dual‑riser, full/low‑profile, extra‑tall) to hold a Roland Fantom‑G8 keyboard.  The stand is built from OnShape FeatureScript geometry, exported as STL, sliced with OrcaSlicer, and printed on a Prusa CORE One.  The repository contains:
+A 3‑D‑printed stand that can be assembled in multiple configurations (single‑riser, dual‑riser, full/low‑profile, extra‑tall) to hold a Roland Fantom‑G8 keyboard.  The stand is built from OnShape FeatureScript geometry, exported as STL, sliced with OrcaSlicer, and printed on a Prusa CORE One.  The repository contains:
 
 - `OnShapeFeatureScript.js` – FeatureScript that generates the parts.
 - `README.md` – detailed print‑and‑assembly instructions.
