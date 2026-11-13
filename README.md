@@ -20,6 +20,12 @@ This project was developed using various AI tools including:
 - **Git** – version control.
 - **Continue** – AI‑assisted development workspace.
 
+### AI Assistant Usage
+This project was developed using various AI tools including:
+- **Claude** for agent-assisted long tasks like overnight reviews of complex FeatureScript changes or print configurations
+- **Google Gemini Argon** for prototype generation and development guidance
+- **VSCode with Continue extension** for AI-assisted coding and documentation updates
+
 ### High‑Level Architecture
 ```
 ┌───────────────────────────────────────────────────────────────────────────────────────┐
