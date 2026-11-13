@@ -7,11 +7,6 @@ A 3‑D‑printed music desk that can be assembled in multiple configurations (s
 - `OnShapeFeatureScript.js` – FeatureScript that generates the parts.
 - `PrintingGuide.md` – detailed print‑and‑assembly instructions.
 
-### Development Tools Used
-This project was developed using various AI tools including:
-- **Claude** for agent-assisted long tasks like overnight reviews of complex FeatureScript changes or print configurations
-- **Google Gemini Argon** for prototype generation and development guidance
-
 ### Key Technologies
 - **OnShape** – cloud CAD platform with FeatureScript.
 - **FeatureScript** – JavaScript‑like language for parametric geometry.
