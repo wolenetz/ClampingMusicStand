@@ -23,8 +23,8 @@ This project was developed using various AI tools including:
 ### AI Assistant Usage
 This project was developed using various AI tools including:
 - **Claude** for agent-assisted long tasks like overnight reviews of complex FeatureScript changes or print configurations (using local qwen3-coder:30b model)
-- **Google Gemini Argon** for prototype generation and development guidance
-- **VSCode with Continue extension** for AI-assisted coding and documentation updates (with gpt-oss:20b and devstral-small-2:24b models for chat-directed updates, and qwen2.5-coder:1.5b model for autocomplete)
+- **Google Gemini Argon** for prototype generation and development guidance (using non-local gpt-oss:20b model)
+- **VSCode with Continue extension** for AI-assisted coding and documentation updates (with local gpt-oss:20b and devstral-small-2:24b models for chat-directed updates, and local qwen2.5-coder:1.5b model for autocomplete)
 
 ### High‑Level Architecture
 ```
