@@ -42,8 +42,8 @@ A 3‑D‑printed music desk that can be assembled in multiple configurations (s
    ```
 2. **Open in VS Code** and ensure the Continue extension is enabled.
 3. **Open the OnShape project** in your OnShape account and link the `OnShapeFeatureScript.js` file.
-4. **Export STL** from OnShape for each part (see `README.md` for part list).
-5. **Load STL files into OrcaSlicer** and apply the slicer settings from `README.md`.
+4. **Export STL** from OnShape for each part (see `PrintingGuide.md` for part list).
+5. **Load STL files into OrcaSlicer** and apply the slicer settings from `PrintingGuide.md`.
 6. **Print** on a Prusa CORE One.
 
 ### Running Tests (Optional)
@@ -62,14 +62,14 @@ Ensure the `OnShapeFeatureScript.js` file is in the current working directory.
 ├── .continue/          # Continue workspace
 │   └── rules/
 │       └── CONTINUE.md
-├── README.md            # Print & assembly guide
+├── PrintingGuide.md            # Print & assembly guide
 ├── OnShapeFeatureScript.js  # FeatureScript source
 └── .git/                # Git metadata
 ```
 
 ### Key Files
 - **`OnShapeFeatureScript.js`** – Parametric geometry for the stand.  The script defines parameters such as `part`, `material`, and `orientation`.
-- **`README.md`** – Human‑readable instructions for printing and assembling the stand.
+- **`PrintingGuide.md`** – Human‑readable instructions for printing and assembling the stand.
 - **`.continue/rules/CONTINUE.md`** – AI‑friendly guide for developers.
 
 ## 4. Development Workflow
@@ -105,7 +105,7 @@ Ensure the `OnShapeFeatureScript.js` file is in the current working directory.
 - **Parameters** – Exposed via the `params` object; they allow users to customize dimensions, material, and orientation.
 - **Slicer Settings** – Layer height, wall count, infill, brim, and support options are critical for part strength.
 - **Modular Riser** – The stand can be configured with a single or dual riser. Parameters `riserType` and `heightProfile` control this.
-- **Print Orientation** – The `README.md` specifies orientations for each part to maximize layer adhesion and support usage.
+- **Print Orientation** – The `PrintingGuide.md` specifies orientations for each part to maximize layer adhesion and support usage.
 
 ## 6. Common Tasks
 
@@ -113,7 +113,7 @@ Ensure the `OnShapeFeatureScript.js` file is in the current working directory.
 1. Define a new function in `OnShapeFeatureScript.js`.
 2. Add a `params` entry for the part name.
 3. Export the part from OnShape and add it to the slicer.
-4. Update the README with orientation and support guidance.
+4. Update the PrintingGuide.md with orientation and support guidance.
 
 ### Updating Slicer Settings
 1. Open OrcaSlicer.
@@ -133,7 +133,7 @@ Ensure the `OnShapeFeatureScript.js` file is in the current working directory.
 | Incomplete infill on Part 3B | Low infill setting | Increase infill to 40 % or use a higher layer height. |
 | Loose dovetail joints | Incorrect clearance | Re‑measure and adjust the dovetail clearance in the script. |
 | Part 4 springs not staying in place | Wrong material | Use PETG as recommended; PLA may not hold the spring tension. |
-| Print prints upside‑down | Wrong orientation | Rotate the part 180° in OrcaSlicer as per README. |
+| Print prints upside‑down | Wrong orientation | Rotate the part 180° in OrcaSlicer as per PrintingGuide.md. |
 
 ## 8. References
 - **OnShape FeatureScript Docs** – https://cad.onshape.com/docs/featureScript.html
