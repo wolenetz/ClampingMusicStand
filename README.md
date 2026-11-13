@@ -18,7 +18,7 @@ A 3‑D‑printed music desk that can be assembled in multiple configurations (s
 ### High‑Level Architecture
 ```
 ┌───────────────────────────────────────────────────────────────────────────────────────┐
-│  OnShapeFeatureScript.js  →  OnShape  →  Export to STL  →  OrcaSlicer  →  Print  │
+│  OnShapeFeatureScript.js  →  OnShape  →  Export to STL  →  OrcaSlicer  →  Print       │
 └───────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
