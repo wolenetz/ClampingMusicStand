@@ -7,19 +7,24 @@ A 3‑D‑printed music desk that can be assembled in multiple configurations (s
 - `OnShapeFeatureScript.js` – FeatureScript that generates the parts.
 - `PrintingGuide.md` – detailed print‑and‑assembly instructions.
 
+This project is specifically designed for use with the Roland Fantom-G8 keyboard, but can be adapted for other keyboards and music stands.
+
 ### Key Technologies
 - **OnShape** – cloud CAD platform with FeatureScript.
 - **FeatureScript** – JavaScript‑like language for parametric geometry.
 - **OrcaSlicer** – open‑source slicer (used for layer height, infill, etc.).
 - **Prusa CORE One** – the 3‑D printer used for the stand.
 - **Git** – version control.
-- **Continue** – AI‑assisted development workspace.
+- **Continue** – VSCode extension for AI-assisted development.
 
 ### AI Assistant Usage
 This project was developed using various AI tools including:
 - **Claude** for agent-assisted long tasks like overnight reviews of complex FeatureScript changes or print configurations (using local qwen3-coder:30b model)
 - **Google Gemini Argon** for prototype generation and development guidance
 - **VSCode with Continue extension** for AI-assisted coding and documentation updates (with local gpt-oss:20b and devstral-small-2:24b models for chat-directed updates, and local qwen2.5-coder:1.5b model for autocomplete)
+
+#### Note on Tool Usage
+These tools were used during development of this specific repository. Users are free to use any tools they prefer for working with this project.
 
 ### High‑Level Architecture
 ```
@@ -38,7 +43,7 @@ This project was developed using various AI tools including:
 | **OrcaSlicer** | Latest release | Download from https://github.com/OrcaSlicer/OrcaSlicer. |
 | **Prusa CORE One** | – | Ensure firmware is up‑to‑date. |
 | **Git** | 2.x | For cloning and version control. |
-| **Continue** | 1.x | Installed as a VS Code extension. |
+| **Continue** | 1.x | VSCode extension for AI-assisted development. |
 
 ### Installation
 1. **Clone the repo**:
@@ -90,6 +95,10 @@ Ensure the `OnShapeFeatureScript.js` file is in the current working directory.
 | **Print** | Print on Prusa CORE One | PrusaSlicer/Print Server |
 | **Commit** | Push changes | Git |
 | **PR** | Submit pull request | GitHub |
+
+### Development Notes
+- The Continue extension enhances development workflow by providing AI-assisted code generation and debugging support.
+- All development is done in a parametric manner using OnShape's FeatureScript language.
 
 
 ### Coding Conventions
