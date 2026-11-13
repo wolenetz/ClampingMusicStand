@@ -26,6 +26,12 @@ This project was developed using various AI tools including:
 - **Google Gemini Argon** for prototype generation and development guidance
 - **VSCode with Continue extension** for AI-assisted coding and documentation updates
 
+#### Model Details
+The following models have been used across Claude and Continue:
+- **Claude**: Local qwen3-coder:30b model
+- **Continue (chat-directed project updates and reviews)**: gpt-oss:20b and devstral-small-2:24b (experimentally)
+- **Continue (autocomplete in VSCode)**: qwen2.5-coder:1.5b (experimentally)
+
 ### High‑Level Architecture
 ```
 ┌───────────────────────────────────────────────────────────────────────────────────────┐
