@@ -14,6 +14,7 @@ A 3‑D‑printed music desk that can be assembled in multiple configurations (s
 - **Prusa CORE One** – the 3‑D printer used for the stand.
 - **Git** – version control.
 - **Continue** – AI‑assisted development workspace.
+- **Claude** – AI assistant for agent-assisted long tasks like overnight reviews.
 
 ### High‑Level Architecture
 ```
@@ -84,6 +85,9 @@ Ensure the `OnShapeFeatureScript.js` file is in the current working directory.
 | **Print** | Print on Prusa CORE One | PrusaSlicer/Print Server |
 | **Commit** | Push changes | Git |
 | **PR** | Submit pull request | GitHub |
+
+### AI Assistant Usage
+- **Claude** can be used for agent-assisted long tasks like overnight reviews of complex FeatureScript changes or print configurations.
 
 ### Coding Conventions
 - Use camelCase for variable names.
