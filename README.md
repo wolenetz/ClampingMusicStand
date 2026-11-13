@@ -2,7 +2,7 @@
 
 ## 1. Project Overview
 
-A 3‑D‑printed stand that can be assembled in multiple configurations (single‑riser, dual‑riser, full/low‑profile, extra‑tall) to hold a Roland Fantom‑G8 keyboard.  The stand is built from OnShape FeatureScript geometry, exported as STL, sliced with OrcaSlicer, and printed on a Prusa CORE One.  The repository contains:
+A 3‑D‑printed stand that can be assembled in multiple configurations (single‑riser, dual‑riser, full/low‑profile, extra‑tall) to hold music. It attaches to an "OnStage" branded keyboard stand, which also happens to be holding my Roland Fantom‑G8.  The stand is built from OnShape FeatureScript geometry, exported as STL, sliced with OrcaSlicer, and printed on a Prusa CORE One.  The repository contains:
 
 - `OnShapeFeatureScript.js` – FeatureScript that generates the parts.
 - `README.md` – detailed print‑and‑assembly instructions.
