@@ -15,6 +15,7 @@ A 3‑D‑printed music desk that can be assembled in multiple configurations (s
 - **Git** – version control.
 - **Continue** – AI‑assisted development workspace.
 - **Claude** – AI assistant for agent-assisted long tasks like overnight reviews.
+- **Google Gemini Argon** – AI assistant for prototype generation and development guidance.
 
 ### High‑Level Architecture
 ```
@@ -34,6 +35,7 @@ A 3‑D‑printed music desk that can be assembled in multiple configurations (s
 | **Prusa CORE One** | – | Ensure firmware is up‑to‑date. |
 | **Git** | 2.x | For cloning and version control. |
 | **Continue** | 1.x | Installed as a VS Code extension. |
+| **AI Tools** | – | Guidance on setting up local Claude, VSCode, and Continue available in documentation. |
 
 ### Installation
 1. **Clone the repo**:
@@ -88,6 +90,7 @@ Ensure the `OnShapeFeatureScript.js` file is in the current working directory.
 
 ### AI Assistant Usage
 - **Claude** can be used for agent-assisted long tasks like overnight reviews of complex FeatureScript changes or print configurations.
+- **Google Gemini Argon** can be used for prototype generation and development guidance.
 
 ### Coding Conventions
 - Use camelCase for variable names.
@@ -138,6 +141,20 @@ Ensure the `OnShapeFeatureScript.js` file is in the current working directory.
 | Loose dovetail joints | Incorrect clearance | Re‑measure and adjust the dovetail clearance in the script. |
 | Part 4 springs not staying in place | Wrong material | Use PETG as recommended; PLA may not hold the spring tension. |
 | Print prints upside‑down | Wrong orientation | Rotate the part 180° in OrcaSlicer as per PrintingGuide.md. |
+
+## 8. AI Development Setup Guidance
+
+### Local Environment Setup
+For local development with AI assistance, ensure you have:
+- **VSCode** installed with the Continue extension enabled
+- **Claude** configured for local use (follow Claude's setup instructions)
+- **Google Gemini Argon** available for prototype generation and guidance
+
+### Continue Extension Usage
+The Continue extension provides AI-assisted coding capabilities. For this project, it can be used to:
+- Generate FeatureScript code snippets
+- Provide debugging assistance
+- Help with documentation updates
 
 ## 8. References
 - **OnShape FeatureScript Docs** – https://cad.onshape.com/docs/featureScript.html
