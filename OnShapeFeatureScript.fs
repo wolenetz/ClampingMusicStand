@@ -24,30 +24,30 @@ export const onStageLClamp = defineFeature(function(context is Context, id is Id
     {
     }
     {
-        var tube_size  = getVar(context, "tube_size", 30.5 * millimeter);
-        var tube_rad   = getVar(context, "tube_rad", 3.5 * millimeter);
-        var clamp_gap  = getVar(context, "clamp_gap", 2.0 * millimeter);
-        var m4_clear   = getVar(context, "m4_clear", 4.4 * millimeter);
-        var m4_nut     = getVar(context, "m4_nut", 7.4 * millimeter);
-        var m4_head    = getVar(context, "m4_head", 7.6 * millimeter);
-        var peg_size   = getVar(context, "peg_size", 20.0 * millimeter);
-        var back_reach = getVar(context, "back_reach", 155.0 * millimeter);
+        var tubeSize  = getVar(context, "tube_size", 30.5 * millimeter);
+        var tubeRad   = getVar(context, "tube_rad", 3.5 * millimeter);
+        var clampGap  = getVar(context, "clamp_gap", 2.0 * millimeter);
+        var m4Clear   = getVar(context, "m4_clear", 4.4 * millimeter);
+        var m4Nut     = getVar(context, "m4_nut", 7.4 * millimeter);
+        var m4Head    = getVar(context, "m4_head", 7.6 * millimeter);
+        var pegSize   = getVar(context, "peg_size", 20.0 * millimeter);
+        var backReach = getVar(context, "back_reach", 155.0 * millimeter);
 
-        var half_tube = tube_size / 2;                // 15.25mm
-        var top_z     = half_tube + (8 * millimeter); // +23.25mm
-        var bot_z     = -35 * millimeter;             // -35.00mm
+        var halfTube = tubeSize / 2;                // 15.25mm
+        var topZ     = halfTube + (8 * millimeter); // +23.25mm
+        var botZ     = -35 * millimeter;             // -35.00mm
 
         // Peg center is at Y = 15.25 + 155 + 12.5 = 182.75mm
-        var peg_center_y  = half_tube + back_reach + (12.5 * millimeter);
-        var arm_extension = 10.0 * millimeter;
-        var arm_end_y     = half_tube + back_reach + (25.0 * millimeter) + arm_extension; // 205.25mm
-        var seat_front_y  = peg_center_y - (15.0 * millimeter); // 167.75mm (Front edge of 40x30mm riser footprint)
-        var spine_bolt_y  = seat_front_y - (20.0 * millimeter); // 147.75mm (20mm in front of riser footprint)
+        var pegCenterY  = halfTube + backReach + (12.5 * millimeter);
+        var armExtension = 10.0 * millimeter;
+        var armEndY     = halfTube + backReach + (25.0 * millimeter) + armExtension; // 205.25mm
+        var seatFrontY  = pegCenterY - (15.0 * millimeter); // 167.75mm (Front edge of 40x30mm riser footprint)
+        var spineBoltY  = seatFrontY - (20.0 * millimeter); // 147.75mm (20mm in front of riser footprint)
 
         // 1. Solid 90mm Wide Clamp Block
         fCuboid(context, id + "clampBlock", {
-                "corner1" : vector(-45 * millimeter, -30 * millimeter, bot_z),
-                "corner2" : vector( 45 * millimeter,  30 * millimeter, top_z)
+                "corner1" : vector(-45 * millimeter, -30 * millimeter, botZ),
+                "corner2" : vector( 45 * millimeter,  30 * millimeter, topZ)
         });
 
         opFillet(context, id + "filletClampOuter", {
@@ -60,13 +60,13 @@ export const onStageLClamp = defineFeature(function(context is Context, id is Id
                 "sketchPlane" : plane(vector(-25 * millimeter, 0 * millimeter, 0 * millimeter), vector(1, 0, 0), vector(0, 1, 0))
         });
 
-        var curve_start_y = arm_end_y - (45 * millimeter);
-        var a1 = vector(20 * millimeter, bot_z);
-        var a2 = vector(curve_start_y,   bot_z);
-        var a3 = vector(arm_end_y,       10 * millimeter);
+        var curveStartY = armEndY - (45 * millimeter);
+        var a1 = vector(20 * millimeter, botZ);
+        var a2 = vector(curveStartY,   botZ);
+        var a3 = vector(armEndY,       10 * millimeter);
         var a4 = vector(20 * millimeter, 10 * millimeter);
 
-        var aMid = vector(curve_start_y + (31 * millimeter), bot_z + (13 * millimeter));
+        var aMid = vector(curveStartY + (31 * millimeter), botZ + (13 * millimeter));
 
         skLineSegment(armProfileSk, "aBottomFlat",  { "start" : a1, "end" : a2 });
         skArc(armProfileSk,         "aBottomSweep", { "start" : a2, "mid" : aMid, "end" : a3 });
@@ -90,14 +90,14 @@ export const onStageLClamp = defineFeature(function(context is Context, id is Id
                 qContainsPoint(armEdges, vector( 25 * millimeter, 50 * millimeter, 10 * millimeter))
         ]);
         var botFlatEdges = qUnion([
-                qContainsPoint(armEdges, vector(-25 * millimeter, 50 * millimeter, bot_z)),
-                qContainsPoint(armEdges, vector( 25 * millimeter, 50 * millimeter, bot_z))
+                qContainsPoint(armEdges, vector(-25 * millimeter, 50 * millimeter, botZ)),
+                qContainsPoint(armEdges, vector( 25 * millimeter, 50 * millimeter, botZ))
         ]);
         var keelArcEdges = qUnion([
                 qContainsPoint(armEdges, vector(-25 * millimeter, aMid[0], aMid[1])),
                 qContainsPoint(armEdges, vector( 25 * millimeter, aMid[0], aMid[1]))
         ]);
-        var rearTopEdge = qContainsPoint(armEdges, vector(0 * millimeter, arm_end_y, 10 * millimeter));
+        var rearTopEdge = qContainsPoint(armEdges, vector(0 * millimeter, armEndY, 10 * millimeter));
 
         opFillet(context, id + "filletArmContours", {
                 "entities" : qUnion([
@@ -110,28 +110,28 @@ export const onStageLClamp = defineFeature(function(context is Context, id is Id
         });
 
         // 2B. Central Dorsal Tension Spine on Part 1A (Y = 20mm to seat_front_y, Z = 11mm to top_z)
-        var spine_bot_z = 10 * millimeter + (clamp_gap / 2); // +11.00mm
+        var spineBotZ = 10 * millimeter + (clampGap / 2); // +11.00mm
         fCuboid(context, id + "armSpine", {
-                "corner1" : vector(-10 * millimeter, 20 * millimeter, spine_bot_z),
-                "corner2" : vector( 10 * millimeter, seat_front_y,    top_z)
+                "corner1" : vector(-10 * millimeter, 20 * millimeter, spineBotZ),
+                "corner2" : vector( 10 * millimeter, seatFrontY,    topZ)
         });
         var spineBody  = qCreatedBy(id + "armSpine", EntityType.BODY);
         var spineEdges = qOwnedByBody(spineBody, EntityType.EDGE);
 
         opFillet(context, id + "filletSpine", {
                 "entities" : qUnion([
-                        qContainsPoint(spineEdges, vector(-10 * millimeter, 100 * millimeter, top_z)), // moved to top of spine
-                        qContainsPoint(spineEdges, vector( 10 * millimeter, 100 * millimeter, top_z)), // moved to top of spine
-                        qContainsPoint(spineEdges, vector(-10 * millimeter, seat_front_y,     top_z)),
-                        qContainsPoint(spineEdges, vector( 10 * millimeter, seat_front_y,     top_z))
+                        qContainsPoint(spineEdges, vector(-10 * millimeter, 100 * millimeter, topZ)), // moved to top of spine
+                        qContainsPoint(spineEdges, vector( 10 * millimeter, 100 * millimeter, topZ)), // moved to top of spine
+                        qContainsPoint(spineEdges, vector(-10 * millimeter, seatFrontY,     topZ)),
+                        qContainsPoint(spineEdges, vector( 10 * millimeter, seatFrontY,     topZ))
                 ]),
                 "radius" : 10 * millimeter
         });
 
         // 3. Solid Upward Riser Peg at the Rear End of the Arm
         fCuboid(context, id + "riserPeg", {
-                "corner1" : vector(-peg_size / 2, peg_center_y - peg_size / 2, 10 * millimeter),
-                "corner2" : vector( peg_size / 2, peg_center_y + peg_size / 2, 40 * millimeter)
+                "corner1" : vector(-pegSize / 2, pegCenterY - pegSize / 2, 10 * millimeter),
+                "corner2" : vector( pegSize / 2, pegCenterY + pegSize / 2, 40 * millimeter)
         });
 
         opBoolean(context, id + "unionBody", {
@@ -148,8 +148,8 @@ export const onStageLClamp = defineFeature(function(context is Context, id is Id
         var tubeSketch = newSketchOnPlane(context, id + "tubeSketch", {
                 "sketchPlane" : plane(vector(-50 * millimeter, 0 * millimeter, 0 * millimeter), vector(1, 0, 0), vector(0, 1, 0))
         });
-        var h = half_tube;
-        var r = tube_rad;
+        var h = halfTube;
+        var r = tubeRad;
         var c = h - r;
         var k = r * cos(45 * degree);
 
@@ -173,14 +173,14 @@ export const onStageLClamp = defineFeature(function(context is Context, id is Id
 
         // 5A. Horizontal Compression Gap at Z = 0mm
         fCuboid(context, id + "gapToolHoriz", {
-                "corner1" : vector(-50 * millimeter, -35 * millimeter, -clamp_gap / 2),
-                "corner2" : vector( 50 * millimeter,  35 * millimeter,  clamp_gap / 2)
+                "corner1" : vector(-50 * millimeter, -35 * millimeter, -clampGap / 2),
+                "corner2" : vector( 50 * millimeter,  35 * millimeter,  clampGap / 2)
         });
 
         // 5B. Split Part 1A from Part 1B
         fCuboid(context, id + "armClearanceCut", {
-                "corner1" : vector(-25 * millimeter - (clamp_gap / 2), 20 * millimeter - clamp_gap, -clamp_gap / 2),
-                "corner2" : vector( 25 * millimeter + (clamp_gap / 2), 35 * millimeter,             spine_bot_z)
+                "corner1" : vector(-25 * millimeter - (clampGap / 2), 20 * millimeter - clampGap, -clampGap / 2),
+                "corner2" : vector( 25 * millimeter + (clampGap / 2), 35 * millimeter,             spineBotZ)
         });
 
         // 6. Four Corner Clamping Bolts + 5th Raised Dorsal Spine Anchor Bolt
@@ -194,13 +194,13 @@ export const onStageLClamp = defineFeature(function(context is Context, id is Id
             vector( 35 * millimeter,  22.5 * millimeter, 0 * millimeter)
         ];
 
-        var head_seat_z_main = top_z - (9.25 * millimeter); // +14.00mm
-        var nut_roof_z_main  = -11 * millimeter;
-        var nut_slot_h       = 2.8 * millimeter;
-        var nut_floor_z_main = nut_roof_z_main - nut_slot_h; // -13.80mm
+        var headSeatZMain = topZ - (9.25 * millimeter); // +14.00mm
+        var nutRoofZMain  = -11 * millimeter;
+        var nutSlotH       = 2.8 * millimeter;
+        var nutFloorZMain = nutRoofZMain - nutSlotH; // -13.80mm
 
         var mainNutSk = newSketchOnPlane(context, id + "mainNutSk", {
-                "sketchPlane" : plane(vector(0 * millimeter, 0 * millimeter, nut_floor_z_main), vector(0, 0, 1), vector(1, 0, 0))
+                "sketchPlane" : plane(vector(0 * millimeter, 0 * millimeter, nutFloorZMain), vector(0, 0, 1), vector(1, 0, 0))
         });
 
         var idx = 0;
@@ -213,31 +213,31 @@ export const onStageLClamp = defineFeature(function(context is Context, id is Id
             fCylinder(context, id + ("holeCyl" ~ idx), {
                     "bottomCenter" : vector(bx, by, -26 * millimeter),
                     "topCenter"    : vector(bx, by,  30 * millimeter),
-                    "radius"       : m4_clear / 2
+                    "radius"       : m4Clear / 2
             });
             boltTools = append(boltTools, qCreatedBy(id + ("holeCyl" ~ idx), EntityType.BODY));
 
             fCylinder(context, id + ("headCyl" ~ idx), {
-                    "bottomCenter" : vector(bx, by, head_seat_z_main),
+                    "bottomCenter" : vector(bx, by, headSeatZMain),
                     "topCenter"    : vector(bx, by, 30 * millimeter),
-                    "radius"       : m4_head / 2
+                    "radius"       : m4Head / 2
             });
             boltTools = append(boltTools, qCreatedBy(id + ("headCyl" ~ idx), EntityType.BODY));
 
             var nutPt = vector(bx, by);
             skRegularPolygon(mainNutSk, "nut" ~ idx, {
                     "center" : nutPt,
-                    "firstVertex" : nutPt + vector(m4_nut / (2 * cos(30 * degree)), 0 * millimeter),
+                    "firstVertex" : nutPt + vector(m4Nut / (2 * cos(30 * degree)), 0 * millimeter),
                     "sides" : 6
             });
 
-            var x_outer = (bx < 0 * millimeter) ? (-50 * millimeter) : (50 * millimeter);
-            var x_min   = (bx < 0 * millimeter) ? x_outer : bx;
-            var x_max   = (bx < 0 * millimeter) ? bx : x_outer;
+            var xOuter = (bx < 0 * millimeter) ? (-50 * millimeter) : (50 * millimeter);
+            var xMin   = (bx < 0 * millimeter) ? xOuter : bx;
+            var xMax   = (bx < 0 * millimeter) ? bx : xOuter;
 
             fCuboid(context, id + ("sideSlot" ~ idx), {
-                    "corner1" : vector(x_min, by - (m4_nut / 2), nut_floor_z_main),
-                    "corner2" : vector(x_max, by + (m4_nut / 2), nut_roof_z_main)
+                    "corner1" : vector(xMin, by - (m4Nut / 2), nutFloorZMain),
+                    "corner2" : vector(xMax, by + (m4Nut / 2), nutRoofZMain)
             });
             boltTools = append(boltTools, qCreatedBy(id + ("sideSlot" ~ idx), EntityType.BODY));
         }
@@ -247,36 +247,36 @@ export const onStageLClamp = defineFeature(function(context is Context, id is Id
                 "entities" : qSketchRegion(id + "mainNutSk"),
                 "direction" : vector(0, 0, 1),
                 "endBound" : BoundingType.BLIND,
-                "endDepth" : nut_slot_h
+                "endDepth" : nutSlotH
         });
         boltTools = append(boltTools, qCreatedBy(id + "extMainNuts", EntityType.BODY));
 
         // --- 6B. 5th Dorsal Anchor Bolt (+4mm Higher in Z for 7mm Part 1A Head Material) ---
-        var head_seat_z_dorsal = top_z - (5.25 * millimeter); // +18.00mm (7mm solid plastic under head!)
-        var nut_roof_z_dorsal  = -7 * millimeter;             // Raised 4mm
-        var nut_floor_z_dorsal = nut_roof_z_dorsal - nut_slot_h; // -9.80mm
+        var headSeatZDorsal = topZ - (5.25 * millimeter); // +18.00mm (7mm solid plastic under head!)
+        var nutRoofZDorsal  = -7 * millimeter;             // Raised 4mm
+        var nutFloorZDorsal = nutRoofZDorsal - nutSlotH; // -9.80mm
 
         idx += 1;
         fCylinder(context, id + ("holeCyl" ~ idx), {
-                "bottomCenter" : vector(0 * millimeter, spine_bolt_y, -26 * millimeter),
-                "topCenter"    : vector(0 * millimeter, spine_bolt_y,  30 * millimeter),
-                "radius"       : m4_clear / 2
+                "bottomCenter" : vector(0 * millimeter, spineBoltY, -26 * millimeter),
+                "topCenter"    : vector(0 * millimeter, spineBoltY,  30 * millimeter),
+                "radius"       : m4Clear / 2
         });
         boltTools = append(boltTools, qCreatedBy(id + ("holeCyl" ~ idx), EntityType.BODY));
 
         fCylinder(context, id + ("headCyl" ~ idx), {
-                "bottomCenter" : vector(0 * millimeter, spine_bolt_y, head_seat_z_dorsal),
-                "topCenter"    : vector(0 * millimeter, spine_bolt_y, 30 * millimeter),
-                "radius"       : m4_head / 2
+                "bottomCenter" : vector(0 * millimeter, spineBoltY, headSeatZDorsal),
+                "topCenter"    : vector(0 * millimeter, spineBoltY, 30 * millimeter),
+                "radius"       : m4Head / 2
         });
         boltTools = append(boltTools, qCreatedBy(id + ("headCyl" ~ idx), EntityType.BODY));
 
         var dorsalNutSk = newSketchOnPlane(context, id + "dorsalNutSk", {
-                "sketchPlane" : plane(vector(0 * millimeter, 0 * millimeter, nut_floor_z_dorsal), vector(0, 0, 1), vector(1, 0, 0))
+                "sketchPlane" : plane(vector(0 * millimeter, 0 * millimeter, nutFloorZDorsal), vector(0, 0, 1), vector(1, 0, 0))
         });
         skRegularPolygon(dorsalNutSk, "dorsalNut", {
-                "center" : vector(0 * millimeter, spine_bolt_y),
-                "firstVertex" : vector(0 * millimeter, spine_bolt_y) + vector(m4_nut / (2 * cos(30 * degree)), 0 * millimeter),
+                "center" : vector(0 * millimeter, spineBoltY),
+                "firstVertex" : vector(0 * millimeter, spineBoltY) + vector(m4Nut / (2 * cos(30 * degree)), 0 * millimeter),
                 "sides" : 6
         });
         skSolve(dorsalNutSk);
@@ -285,22 +285,22 @@ export const onStageLClamp = defineFeature(function(context is Context, id is Id
                 "entities" : qSketchRegion(id + "dorsalNutSk"),
                 "direction" : vector(0, 0, 1),
                 "endBound" : BoundingType.BLIND,
-                "endDepth" : nut_slot_h
+                "endDepth" : nutSlotH
         });
         boltTools = append(boltTools, qCreatedBy(id + "extDorsalNut", EntityType.BODY));
 
         fCuboid(context, id + "sideSlotDorsal", {
-                "corner1" : vector(0 * millimeter, spine_bolt_y - (m4_nut / 2), nut_floor_z_dorsal),
-                "corner2" : vector(50 * millimeter, spine_bolt_y + (m4_nut / 2), nut_roof_z_dorsal)
+                "corner1" : vector(0 * millimeter, spineBoltY - (m4Nut / 2), nutFloorZDorsal),
+                "corner2" : vector(50 * millimeter, spineBoltY + (m4Nut / 2), nutRoofZDorsal)
         });
         boltTools = append(boltTools, qCreatedBy(id + "sideSlotDorsal", EntityType.BODY));
 
 
         // 7. Riser Peg Locking Pin Hole (M4 Through-Hole along Y-axis at X = 0mm, Z = +25mm)
         fCylinder(context, id + "pinCyl", {
-                "bottomCenter" : vector(0 * millimeter, peg_center_y - 15 * millimeter, 25 * millimeter),
-                "topCenter"    : vector(0 * millimeter, peg_center_y + 15 * millimeter, 25 * millimeter),
-                "radius"       : m4_clear / 2
+                "bottomCenter" : vector(0 * millimeter, pegCenterY - 15 * millimeter, 25 * millimeter),
+                "topCenter"    : vector(0 * millimeter, pegCenterY + 15 * millimeter, 25 * millimeter),
+                "radius"       : m4Clear / 2
         });
         boltTools = append(boltTools, qCreatedBy(id + "pinCyl", EntityType.BODY));
 
@@ -328,28 +328,28 @@ export const onStageRiserStem = defineFeature(function(context is Context, id is
     {
     }
     {
-        var m4_clear = getVar(context, "m4_clear", 4.4 * millimeter);
-        var m4_nut   = getVar(context, "m4_nut", 7.4 * millimeter);
-        var m4_head  = getVar(context, "m4_head", 7.6 * millimeter);
-        var peg_size = getVar(context, "peg_size", 20.0 * millimeter);
+        var m4Clear = getVar(context, "m4_clear", 4.4 * millimeter);
+        var m4Nut   = getVar(context, "m4_nut", 7.4 * millimeter);
+        var m4Head  = getVar(context, "m4_head", 7.6 * millimeter);
+        var pegSize = getVar(context, "peg_size", 20.0 * millimeter);
         var tol      = getVar(context, "tol", 0.3 * millimeter);
 
-        var col_w   = 40 * millimeter; // 40mm wide
-        var col_d   = 30 * millimeter; // 30mm deep
-        var half_w  = col_w / 2;       // 20mm
-        var half_d  = col_d / 2;       // 15mm
-        var peg_h   = 30 * millimeter; // 30mm tall mating peg (matches Part 1B)
-        var dove_h  = 70 * millimeter; // 70mm tall mega-dovetail
-        var pin_z   = 15 * millimeter; // Locking bolt height inside sockets/pegs
+        var colW   = 40 * millimeter; // 40mm wide
+        var colD   = 30 * millimeter; // 30mm deep
+        var halfW  = colW / 2;       // 20mm
+        var halfD  = colD / 2;       // 15mm
+        var pegH   = 30 * millimeter; // 30mm tall mating peg (matches Part 1B)
+        var doveH  = 70 * millimeter; // 70mm tall mega-dovetail
+        var pinZ   = 15 * millimeter; // Locking bolt height inside sockets/pegs
 
         // Splitting the 223mm column into two bed-friendly segments:
         // 115mm (2A body) + 108mm (2B body) = 223mm total column height
         var col_h_2A = 115 * millimeter; // Part 2A total length = 115 + 30 = 145mm
         var col_h_2B = 108 * millimeter; // Part 2B total length = 108 + 70 = 178mm
 
-        var socket_size = peg_size + tol;
-        var half_soc    = socket_size / 2;
-        var half_peg    = peg_size / 2;
+        var socketSize = pegSize + tol;
+        var halfSoc    = socketSize / 2;
+        var halfPeg    = pegSize / 2;
 
         // =================================================================
         // PART 2A: Lower Modular Extension Column (X = 75mm, Y = 0mm)
@@ -359,8 +359,8 @@ export const onStageRiserStem = defineFeature(function(context is Context, id is
 
         // 1. Main 40x30x115mm Column Body
         fCuboid(context, id + "col2A", {
-                "corner1" : vector(cxA - half_w, cyA - half_d, 0 * millimeter),
-                "corner2" : vector(cxA + half_w, cyA + half_d, col_h_2A)
+                "corner1" : vector(cxA - halfW, cyA - halfD, 0 * millimeter),
+                "corner2" : vector(cxA + halfW, cyA + halfD, col_h_2A)
         });
 
         opFillet(context, id + "filletCol2A", {
@@ -370,8 +370,8 @@ export const onStageRiserStem = defineFeature(function(context is Context, id is
 
         // 2. Top 20x20x30mm Male Coupling Peg (Z = 115mm to 145mm)
         fCuboid(context, id + "peg2A", {
-                "corner1" : vector(cxA - half_peg, cyA - half_peg, col_h_2A),
-                "corner2" : vector(cxA + half_peg, cyA + half_peg, col_h_2A + peg_h)
+                "corner1" : vector(cxA - halfPeg, cyA - halfPeg, col_h_2A),
+                "corner2" : vector(cxA + halfPeg, cyA + halfPeg, col_h_2A + pegH)
         });
 
         opBoolean(context, id + "union2A", {
@@ -384,31 +384,31 @@ export const onStageRiserStem = defineFeature(function(context is Context, id is
 
         // 3. Bottom Female Socket Cutout (31mm deep) + Lower & Upper M4 Locking Holes
         fCuboid(context, id + "socketCut2A", {
-                "corner1" : vector(cxA - half_soc, cyA - half_soc, -1 * millimeter),
-                "corner2" : vector(cxA + half_soc, cyA + half_soc, 31 * millimeter)
+                "corner1" : vector(cxA - halfSoc, cyA - halfSoc, -1 * millimeter),
+                "corner2" : vector(cxA + halfSoc, cyA + halfSoc, 31 * millimeter)
         });
 
         // Lower Socket M4 Through-Hole (Z = 15mm)
         fCylinder(context, id + "pinCyl2A_Bot", {
-                "bottomCenter" : vector(cxA, cyA - (20 * millimeter), pin_z),
-                "topCenter"    : vector(cxA, cyA + (20 * millimeter), pin_z),
-                "radius"       : m4_clear / 2
+                "bottomCenter" : vector(cxA, cyA - (20 * millimeter), pinZ),
+                "topCenter"    : vector(cxA, cyA + (20 * millimeter), pinZ),
+                "radius"       : m4Clear / 2
         });
 
         // Lower Socket Front M4 Head Counterbore (2.0mm deep)
         fCylinder(context, id + "headCyl2A_Bot", {
-                "bottomCenter" : vector(cxA, cyA - (20 * millimeter), pin_z),
-                "topCenter"    : vector(cxA, cyA - (13 * millimeter), pin_z),
-                "radius"       : m4_head / 2
+                "bottomCenter" : vector(cxA, cyA - (20 * millimeter), pinZ),
+                "topCenter"    : vector(cxA, cyA - (13 * millimeter), pinZ),
+                "radius"       : m4Head / 2
         });
 
         // Lower Socket Rear M4 Hex Nut Trap (2.0mm deep)
         var nutSk2A = newSketchOnPlane(context, id + "nutSk2A", {
-                "sketchPlane" : plane(vector(cxA, cyA + half_d, pin_z), vector(0, 1, 0), vector(1, 0, 0))
+                "sketchPlane" : plane(vector(cxA, cyA + halfD, pinZ), vector(0, 1, 0), vector(1, 0, 0))
         });
         skRegularPolygon(nutSk2A, "hex2A", {
                 "center" : vector(0 * millimeter, 0 * millimeter),
-                "firstVertex" : vector(0 * millimeter, m4_nut / (2 * cos(30 * degree))),
+                "firstVertex" : vector(0 * millimeter, m4Nut / (2 * cos(30 * degree))),
                 "sides" : 6
         });
         skSolve(nutSk2A);
@@ -422,9 +422,9 @@ export const onStageRiserStem = defineFeature(function(context is Context, id is
 
         // Upper Peg M4 Through-Hole (Z = 115 + 15 = 130mm)
         fCylinder(context, id + "pinCyl2A_Top", {
-                "bottomCenter" : vector(cxA, cyA - (15 * millimeter), col_h_2A + pin_z),
-                "topCenter"    : vector(cxA, cyA + (15 * millimeter), col_h_2A + pin_z),
-                "radius"       : m4_clear / 2
+                "bottomCenter" : vector(cxA, cyA - (15 * millimeter), col_h_2A + pinZ),
+                "topCenter"    : vector(cxA, cyA + (15 * millimeter), col_h_2A + pinZ),
+                "radius"       : m4Clear / 2
         });
 
         opBoolean(context, id + "finalCut2A", {
@@ -450,8 +450,8 @@ export const onStageRiserStem = defineFeature(function(context is Context, id is
 
         // 1. Main 40x30x108mm Column Body
         fCuboid(context, id + "col2B", {
-                "corner1" : vector(cxB - half_w, cyB - half_d, 0 * millimeter),
-                "corner2" : vector(cxB + half_w, cyB + half_d, col_h_2B)
+                "corner1" : vector(cxB - halfW, cyB - halfD, 0 * millimeter),
+                "corner2" : vector(cxB + halfW, cyB + halfD, col_h_2B)
         });
 
         opFillet(context, id + "filletCol2B", {
@@ -463,22 +463,22 @@ export const onStageRiserStem = defineFeature(function(context is Context, id is
         var doveSketch = newSketchOnPlane(context, id + "doveSketch", {
                 "sketchPlane" : plane(vector(cxB, cyB, col_h_2B), vector(0, 0, 1), vector(1, 0, 0))
         });
-        var y_back    = half_d;                      // +15mm (flush with back face of column for flat printing!)
-        var y_front   = half_d - (18 * millimeter);  // -3mm  (18mm thick mega-dovetail)
-        var half_neck = 13.0 * millimeter;           // 26mm total neck width
-        var half_wide = 19.0 * millimeter;           // 38mm total front flare width
+        var yBack    = halfD;                      // +15mm (flush with back face of column for flat printing!)
+        var yFront   = halfD - (18 * millimeter);  // -3mm  (18mm thick mega-dovetail)
+        var halfNeck = 13.0 * millimeter;           // 26mm total neck width
+        var halfWide = 19.0 * millimeter;           // 38mm total front flare width
 
-        skLineSegment(doveSketch, "backEdge",  { "start" : vector(-half_neck, y_back),  "end" : vector( half_neck, y_back) });
-        skLineSegment(doveSketch, "rightEdge", { "start" : vector( half_neck, y_back),  "end" : vector( half_wide, y_front) });
-        skLineSegment(doveSketch, "frontEdge", { "start" : vector( half_wide, y_front), "end" : vector(-half_wide, y_front) });
-        skLineSegment(doveSketch, "leftEdge",  { "start" : vector(-half_wide, y_front), "end" : vector(-half_neck, y_back) });
+        skLineSegment(doveSketch, "backEdge",  { "start" : vector(-halfNeck, yBack),  "end" : vector( halfNeck, yBack) });
+        skLineSegment(doveSketch, "rightEdge", { "start" : vector( halfNeck, yBack),  "end" : vector( halfWide, yFront) });
+        skLineSegment(doveSketch, "frontEdge", { "start" : vector( halfWide, yFront), "end" : vector(-halfWide, yFront) });
+        skLineSegment(doveSketch, "leftEdge",  { "start" : vector(-halfWide, yFront), "end" : vector(-halfNeck, yBack) });
         skSolve(doveSketch);
 
         opExtrude(context, id + "extDove", {
                 "entities" : qSketchRegion(id + "doveSketch"),
                 "direction" : vector(0, 0, 1),
                 "endBound" : BoundingType.BLIND,
-                "endDepth" : dove_h
+                "endDepth" : doveH
         });
 
         opBoolean(context, id + "union2B", {
@@ -491,28 +491,28 @@ export const onStageRiserStem = defineFeature(function(context is Context, id is
 
         // 3. Bottom Female Socket Cutout (31mm deep) + M4 Locking Bolt Bore
         fCuboid(context, id + "socketCut2B", {
-                "corner1" : vector(cxB - half_soc, cyB - half_soc, -1 * millimeter),
-                "corner2" : vector(cxB + half_soc, cyB + half_soc, 31 * millimeter)
+                "corner1" : vector(cxB - halfSoc, cyB - halfSoc, -1 * millimeter),
+                "corner2" : vector(cxB + halfSoc, cyB + halfSoc, 31 * millimeter)
         });
 
         fCylinder(context, id + "pinCyl2B", {
-                "bottomCenter" : vector(cxB, cyB - (20 * millimeter), pin_z),
-                "topCenter"    : vector(cxB, cyB + (20 * millimeter), pin_z),
-                "radius"       : m4_clear / 2
+                "bottomCenter" : vector(cxB, cyB - (20 * millimeter), pinZ),
+                "topCenter"    : vector(cxB, cyB + (20 * millimeter), pinZ),
+                "radius"       : m4Clear / 2
         });
 
         fCylinder(context, id + "headCyl2B", {
-                "bottomCenter" : vector(cxB, cyB - (20 * millimeter), pin_z),
-                "topCenter"    : vector(cxB, cyB - (13 * millimeter), pin_z),
-                "radius"       : m4_head / 2
+                "bottomCenter" : vector(cxB, cyB - (20 * millimeter), pinZ),
+                "topCenter"    : vector(cxB, cyB - (13 * millimeter), pinZ),
+                "radius"       : m4Head / 2
         });
 
         var nutSk2B = newSketchOnPlane(context, id + "nutSk2B", {
-                "sketchPlane" : plane(vector(cxB, cyB + half_d, pin_z), vector(0, 1, 0), vector(1, 0, 0))
+                "sketchPlane" : plane(vector(cxB, cyB + halfD, pinZ), vector(0, 1, 0), vector(1, 0, 0))
         });
         skRegularPolygon(nutSk2B, "hex2B", {
                 "center" : vector(0 * millimeter, 0 * millimeter),
-                "firstVertex" : vector(0 * millimeter, m4_nut / (2 * cos(30 * degree))),
+                "firstVertex" : vector(0 * millimeter, m4Nut / (2 * cos(30 * degree))),
                 "sides" : 6
         });
         skSolve(nutSk2B);
@@ -546,51 +546,51 @@ export const onStageMusicDesk3A = defineFeature(function(context is Context, id 
     }
     {
         var tol        = getVar(context, "tol", 0.3 * millimeter);
-        var desk_angle = getVar(context, "desk_angle", 15 * degree);
-        var m3_clear   = getVar(context, "m3_clear", 3.4 * millimeter);
+        var deskAngle = getVar(context, "desk_angle", 15 * degree);
+        var m3Clear   = getVar(context, "m3_clear", 3.4 * millimeter);
 
-        var slide_tol  = tol + (0.15 * millimeter);
+        var slideTol  = tol + (0.15 * millimeter);
 
         var cx = 230 * millimeter;
         var cy = 0 * millimeter;
 
-        var desk_w  = 240 * millimeter;
-        var half_w  = desk_w / 2;       // 120mm
-        var lower_h = 180 * millimeter; // Height of Part 3A lower plate
-        var plate_t = 6 * millimeter;   // 6mm rigid main backplate
-        var shelf_t = 8 * millimeter;   // 8mm bottom shelf
-        var shelf_d = 48 * millimeter;  // 48mm inside book-resting depth
-        var lip_t   = 5 * millimeter;   // 5mm front retention lip thickness
-        var lip_h   = 8 * millimeter;   // 8mm upward front retention lip
+        var deskW  = 240 * millimeter;
+        var halfW  = deskW / 2;       // 120mm
+        var lowerH = 180 * millimeter; // Height of Part 3A lower plate
+        var plateT = 6 * millimeter;   // 6mm rigid main backplate
+        var shelfT = 8 * millimeter;   // 8mm bottom shelf
+        var shelfD = 48 * millimeter;  // 48mm inside book-resting depth
+        var lipT   = 5 * millimeter;   // 5mm front retention lip thickness
+        var lipH   = 8 * millimeter;   // 8mm upward front retention lip
 
-        var y_front_edge   = cy - plate_t - shelf_d - lip_t; // -59mm
-        var rail_x_offsets = [-75 * millimeter, 75 * millimeter];
+        var yFrontEdge   = cy - plateT - shelfD - lipT; // -59mm
+        var railXOffsets = [-75 * millimeter, 75 * millimeter];
 
         // 1. Lower Vertical Backing Plate (Y = -6mm to 0mm, Z = 0 to 180mm)
         fCuboid(context, id + "backPlate", {
-                "corner1" : vector(cx - half_w, cy - plate_t, 0 * millimeter),
-                "corner2" : vector(cx + half_w, cy,           lower_h)
+                "corner1" : vector(cx - halfW, cy - plateT, 0 * millimeter),
+                "corner2" : vector(cx + halfW, cy,           lowerH)
         });
 
         // 2. Continuous Profiled Book Shelf + Front Lip + 4mm Inside Root Chamfer in ONE Sketch!
         // Note: Sketch plane X-axis is vector(0, 1, 0) [Global Y] and Y-axis is vector(0, 0, 1) [Global Z]
         var shelfSketch = newSketchOnPlane(context, id + "shelfSketch", {
-                "sketchPlane" : plane(vector(cx - half_w, 0 * millimeter, 0 * millimeter), vector(1, 0, 0), vector(0, 1, 0))
+                "sketchPlane" : plane(vector(cx - halfW, 0 * millimeter, 0 * millimeter), vector(1, 0, 0), vector(0, 1, 0))
         });
 
-        var lip_top_z = shelf_t + lip_h;         // 16mm
-        var r_lip     = 2.4 * millimeter;        // Smooth 2.4mm front-top bullnose radius on the 5mm lip
-        var arc_off   = r_lip * (1 - cos(45 * degree)); // Exact 45-deg point on circle (~0.703mm from corner)
+        var lipTopZ = shelfT + lipH;         // 16mm
+        var rLip     = 2.4 * millimeter;        // Smooth 2.4mm front-top bullnose radius on the 5mm lip
+        var arcOff   = rLip * (1 - cos(45 * degree)); // Exact 45-deg point on circle (~0.703mm from corner)
 
-        var s1 = vector(-plate_t,                  0 * millimeter);         // Bottom-back at backplate
-        var s2 = vector(y_front_edge,              0 * millimeter);         // Bottom-front (flat on print bed)
-        var s3 = vector(y_front_edge,              lip_top_z - r_lip);      // Start of front-top lip curve
-        var sM = vector(y_front_edge + arc_off,    lip_top_z - arc_off);    // Exact tangent arc midpoint
-        var s4 = vector(y_front_edge + r_lip,      lip_top_z);              // End of front-top lip curve
-        var s5 = vector(y_front_edge + lip_t,      lip_top_z);              // Top-back of lip
-        var s6 = vector(y_front_edge + lip_t,      shelf_t);                // Inside bottom of lip
-        var s7 = vector(-plate_t - 4 * millimeter, shelf_t);                // Start of 4mm inside root chamfer
-        var s8 = vector(-plate_t,                  shelf_t + 4 * millimeter); // Top of 4mm inside root chamfer
+        var s1 = vector(-plateT,                  0 * millimeter);         // Bottom-back at backplate
+        var s2 = vector(yFrontEdge,              0 * millimeter);         // Bottom-front (flat on print bed)
+        var s3 = vector(yFrontEdge,              lipTopZ - rLip);      // Start of front-top lip curve
+        var sM = vector(yFrontEdge + arcOff,    lipTopZ - arcOff);    // Exact tangent arc midpoint
+        var s4 = vector(yFrontEdge + rLip,      lipTopZ);              // End of front-top lip curve
+        var s5 = vector(yFrontEdge + lipT,      lipTopZ);              // Top-back of lip
+        var s6 = vector(yFrontEdge + lipT,      shelfT);                // Inside bottom of lip
+        var s7 = vector(-plateT - 4 * millimeter, shelfT);                // Start of 4mm inside root chamfer
+        var s8 = vector(-plateT,                  shelfT + 4 * millimeter); // Top of 4mm inside root chamfer
 
         skLineSegment(shelfSketch, "sBot",      { "start" : s1, "end" : s2 });
         skLineSegment(shelfSketch, "sFront",    { "start" : s2, "end" : s3 });
@@ -606,15 +606,15 @@ export const onStageMusicDesk3A = defineFeature(function(context is Context, id 
                 "entities" : qSketchRegion(id + "shelfSketch"),
                 "direction" : vector(1, 0, 0),
                 "endBound" : BoundingType.BLIND,
-                "endDepth" : desk_w
+                "endDepth" : deskW
         });
 
         // 3. Full-Width Lower Rear Torsion Spine (Y = 0 to +6mm, Z = 0 to 50mm)
         // Making it full-width (cx - half_w to cx + half_w) makes its left/right faces 100% coplanar with
         // backPlate and extShelfLip, so when unioned below, they merge into ONE flat side face with zero steps!
         fCuboid(context, id + "rearSpine", {
-                "corner1" : vector(cx - half_w, cy,                  0 * millimeter),
-                "corner2" : vector(cx + half_w, cy + 6 * millimeter, 50 * millimeter)
+                "corner1" : vector(cx - halfW, cy,                  0 * millimeter),
+                "corner2" : vector(cx + halfW, cy + 6 * millimeter, 50 * millimeter)
         });
 
         // 4. Union the Main Desk Shell First (Merges Backplate + Shelf/Lip + Rear Spine into a single continuous body)
@@ -640,33 +640,33 @@ export const onStageMusicDesk3A = defineFeature(function(context is Context, id 
         }
 
         // 6. Two Vertical Female Dovetail Guide Housings (X = +/-75mm, Z = 50mm to 180mm)
-        var guide_half_w = 16 * millimeter;
-        var guide_depth  = 14 * millimeter;
+        var guideHalfW = 16 * millimeter;
+        var guideDepth  = 14 * millimeter;
         var guideBodies  = [];
         var gIdx = 0;
 
-        for (var rx in rail_x_offsets)
+        for (var rx in railXOffsets)
         {
             gIdx += 1;
             fCuboid(context, id + ("guideBlock" ~ gIdx), {
-                    "corner1" : vector(cx + rx - guide_half_w, cy,               50 * millimeter),
-                    "corner2" : vector(cx + rx + guide_half_w, cy + guide_depth, lower_h)
+                    "corner1" : vector(cx + rx - guideHalfW, cy,               50 * millimeter),
+                    "corner2" : vector(cx + rx + guideHalfW, cy + guideDepth, lowerH)
             });
             guideBodies = append(guideBodies, qCreatedBy(id + ("guideBlock" ~ gIdx), EntityType.BODY));
         }
 
         // 7. Center Angled Heavy-Duty Riser Receiver Block (64mm wide x 95mm tall housing)
-        var rec_half_w = 32 * millimeter;
-        var rec_height = 95 * millimeter;
-        var base_depth = 26 * millimeter + (rec_height * sin(desk_angle));
+        var recHalfW = 32 * millimeter;
+        var recHeight = 95 * millimeter;
+        var baseDepth = 26 * millimeter + (recHeight * sin(deskAngle));
 
         var wedgeSketch = newSketchOnPlane(context, id + "wedgeSketch", {
-                "sketchPlane" : plane(vector(cx - rec_half_w, cy, 0 * millimeter), vector(1, 0, 0), vector(0, 1, 0))
+                "sketchPlane" : plane(vector(cx - recHalfW, cy, 0 * millimeter), vector(1, 0, 0), vector(0, 1, 0))
         });
         var w1 = vector(0 * millimeter, 0 * millimeter);
-        var w2 = vector(base_depth,     0 * millimeter);
-        var w3 = vector(base_depth - (rec_height * sin(desk_angle)), rec_height * cos(desk_angle));
-        var w4 = vector(0 * millimeter, rec_height * cos(desk_angle));
+        var w2 = vector(baseDepth,     0 * millimeter);
+        var w3 = vector(baseDepth - (recHeight * sin(deskAngle)), recHeight * cos(deskAngle));
+        var w4 = vector(0 * millimeter, recHeight * cos(deskAngle));
 
         skLineSegment(wedgeSketch, "wBot",   { "start" : w1, "end" : w2 });
         skLineSegment(wedgeSketch, "wBack",  { "start" : w2, "end" : w3 });
@@ -678,7 +678,7 @@ export const onStageMusicDesk3A = defineFeature(function(context is Context, id 
                 "entities" : qSketchRegion(id + "wedgeSketch"),
                 "direction" : vector(1, 0, 0),
                 "endBound" : BoundingType.BLIND,
-                "endDepth" : rec_half_w * 2
+                "endDepth" : recHalfW * 2
         });
 
         // Union Guide Blocks and Center Receiver onto the Filleted Desk Shell
@@ -694,27 +694,27 @@ export const onStageMusicDesk3A = defineFeature(function(context is Context, id 
         });
 
         // 8. Cut Center Angled Riser Female Dovetail + Dual Vertical Slider Female Dovetails + Detent Pin Holes
-        var u_slide = vector(0, -sin(desk_angle), cos(desk_angle));
-        var cornerOrigin = vector(cx, base_depth, 0 * millimeter) - (8 * millimeter) * u_slide;
+        var uSlide = vector(0, -sin(deskAngle), cos(deskAngle));
+        var cornerOrigin = vector(cx, baseDepth, 0 * millimeter) - (8 * millimeter) * uSlide;
 
         var doveCutSketch = newSketchOnPlane(context, id + "doveCutSketch", {
-                "sketchPlane" : plane(cornerOrigin, u_slide, vector(1, 0, 0))
+                "sketchPlane" : plane(cornerOrigin, uSlide, vector(1, 0, 0))
         });
 
-        var d_outer   = 2 * millimeter;
-        var d_inner   = -(18 * millimeter) - tol;
-        var half_neck = (13.0 * millimeter) + tol;
-        var half_wide = (19.0 * millimeter) + tol;
+        var dOuter   = 2 * millimeter;
+        var dInner   = -(18 * millimeter) - tol;
+        var halfNeck = (13.0 * millimeter) + tol;
+        var halfWide = (19.0 * millimeter) + tol;
 
-        skLineSegment(doveCutSketch, "dBack",  { "start" : vector(-half_neck, d_outer), "end" : vector( half_neck, d_outer) });
-        skLineSegment(doveCutSketch, "dRight", { "start" : vector( half_neck, d_outer), "end" : vector( half_wide, d_inner) });
-        skLineSegment(doveCutSketch, "dFront", { "start" : vector( half_wide, d_inner), "end" : vector(-half_wide, d_inner) });
-        skLineSegment(doveCutSketch, "dLeft",  { "start" : vector(-half_wide, d_inner), "end" : vector(-half_neck, d_outer) });
+        skLineSegment(doveCutSketch, "dBack",  { "start" : vector(-halfNeck, dOuter), "end" : vector( halfNeck, dOuter) });
+        skLineSegment(doveCutSketch, "dRight", { "start" : vector( halfNeck, dOuter), "end" : vector( halfWide, dInner) });
+        skLineSegment(doveCutSketch, "dFront", { "start" : vector( halfWide, dInner), "end" : vector(-halfWide, dInner) });
+        skLineSegment(doveCutSketch, "dLeft",  { "start" : vector(-halfWide, dInner), "end" : vector(-halfNeck, dOuter) });
         skSolve(doveCutSketch);
 
         opExtrude(context, id + "extDoveCut", {
                 "entities" : qSketchRegion(id + "doveCutSketch"),
-                "direction" : u_slide,
+                "direction" : uSlide,
                 "endBound" : BoundingType.BLIND,
                 "endDepth" : 79 * millimeter
         });
@@ -723,25 +723,25 @@ export const onStageMusicDesk3A = defineFeature(function(context is Context, id 
                 "sketchPlane" : plane(vector(cx, cy, 50 * millimeter), vector(0, 0, 1), vector(1, 0, 0))
         });
 
-        var s_y_out  = guide_depth + (1 * millimeter);
-        var s_y_in   = (5 * millimeter) - slide_tol;
-        var s_h_neck = (6 * millimeter) + slide_tol;
-        var s_h_wide = (9 * millimeter) + slide_tol;
+        var sYOut  = guideDepth + (1 * millimeter);
+        var sYIn   = (5 * millimeter) - slideTol;
+        var sHNeck = (6 * millimeter) + slideTol;
+        var sHWide = (9 * millimeter) + slideTol;
 
         var lockTools = [];
         var sIdx = 0;
-        for (var rx in rail_x_offsets)
+        for (var rx in railXOffsets)
         {
             sIdx += 1;
-            skLineSegment(femSlideSk, "fsB" ~ sIdx, { "start" : vector(rx - s_h_neck, s_y_out), "end" : vector(rx + s_h_neck, s_y_out) });
-            skLineSegment(femSlideSk, "fsR" ~ sIdx, { "start" : vector(rx + s_h_neck, s_y_out), "end" : vector(rx + s_h_wide, s_y_in) });
-            skLineSegment(femSlideSk, "fsF" ~ sIdx, { "start" : vector(rx + s_h_wide, s_y_in),  "end" : vector(rx - s_h_wide, s_y_in) });
-            skLineSegment(femSlideSk, "fsL" ~ sIdx, { "start" : vector(rx - s_h_wide, s_y_in),  "end" : vector(rx - s_h_neck, s_y_out) });
+            skLineSegment(femSlideSk, "fsB" ~ sIdx, { "start" : vector(rx - sHNeck, sYOut), "end" : vector(rx + sHNeck, sYOut) });
+            skLineSegment(femSlideSk, "fsR" ~ sIdx, { "start" : vector(rx + sHNeck, sYOut), "end" : vector(rx + sHWide, sYIn) });
+            skLineSegment(femSlideSk, "fsF" ~ sIdx, { "start" : vector(rx + sHWide, sYIn),  "end" : vector(rx - sHWide, sYIn) });
+            skLineSegment(femSlideSk, "fsL" ~ sIdx, { "start" : vector(rx - sHWide, sYIn),  "end" : vector(rx - sHNeck, sYOut) });
 
             fCylinder(context, id + ("baseDetentHole" ~ sIdx), {
-                "bottomCenter" : vector(cx + rx - guide_half_w - (2 * millimeter), cy + 9.5 * millimeter, 160 * millimeter),
-                "topCenter"    : vector(cx + rx + guide_half_w + (2 * millimeter), cy + 9.5 * millimeter, 160 * millimeter),
-                "radius"       : m3_clear / 2
+                "bottomCenter" : vector(cx + rx - guideHalfW - (2 * millimeter), cy + 9.5 * millimeter, 160 * millimeter),
+                "topCenter"    : vector(cx + rx + guideHalfW + (2 * millimeter), cy + 9.5 * millimeter, 160 * millimeter),
+                "radius"       : m3Clear / 2
             });
             lockTools = append(lockTools, qCreatedBy(id + ("baseDetentHole" ~ sIdx), EntityType.BODY));
         }
@@ -775,53 +775,53 @@ export const onStageMusicDesk3ADual = defineFeature(function(context is Context,
     }
     {
         var tol        = getVar(context, "tol", 0.3 * millimeter);
-        var desk_angle = getVar(context, "desk_angle", 15 * degree);
-        var m3_clear   = getVar(context, "m3_clear", 3.4 * millimeter);
+        var deskAngle = getVar(context, "desk_angle", 15 * degree);
+        var m3Clear   = getVar(context, "m3_clear", 3.4 * millimeter);
 
-        var slide_tol  = tol + (0.15 * millimeter);
+        var slideTol  = tol + (0.15 * millimeter);
 
         // Positioned directly behind standard Part 3A at Y = 220mm for clean Part Studio viewing
         var cx = 230 * millimeter;
         var cy = 220 * millimeter;
 
-        var desk_w  = 240 * millimeter;
-        var half_w  = desk_w / 2;       // 120mm
-        var lower_h = 180 * millimeter; // Height of Part 3A lower plate
-        var plate_t = 6 * millimeter;   // 6mm rigid main backplate
-        var shelf_t = 8 * millimeter;   // 8mm bottom shelf
-        var shelf_d = 48 * millimeter;  // 48mm inside book-resting depth
-        var lip_t   = 5 * millimeter;   // 5mm front retention lip thickness
-        var lip_h   = 8 * millimeter;   // 8mm upward front retention lip
+        var deskW  = 240 * millimeter;
+        var halfW  = deskW / 2;       // 120mm
+        var lowerH = 180 * millimeter; // Height of Part 3A lower plate
+        var plateT = 6 * millimeter;   // 6mm rigid main backplate
+        var shelfT = 8 * millimeter;   // 8mm bottom shelf
+        var shelfD = 48 * millimeter;  // 48mm inside book-resting depth
+        var lipT   = 5 * millimeter;   // 5mm front retention lip thickness
+        var lipH   = 8 * millimeter;   // 8mm upward front retention lip
 
         // Sketch-local Y coordinates (relative to cy) so profile math is identical to 3A
-        var y_front_local  = -plate_t - shelf_d - lip_t; // -59mm
-        var rail_x_offsets = [-75 * millimeter, 75 * millimeter];
-        var riser_x_offsets = [-75 * millimeter, 75 * millimeter]; // 150mm center-to-center dual riser spacing
+        var yFrontLocal  = -plateT - shelfD - lipT; // -59mm
+        var railXOffsets = [-75 * millimeter, 75 * millimeter];
+        var riserXOffsets = [-75 * millimeter, 75 * millimeter]; // 150mm center-to-center dual riser spacing
 
         // 1. Lower Vertical Backing Plate (Y = cy - 6mm to cy, Z = 0 to 180mm)
         fCuboid(context, id + "backPlate", {
-                "corner1" : vector(cx - half_w, cy - plate_t, 0 * millimeter),
-                "corner2" : vector(cx + half_w, cy,           lower_h)
+                "corner1" : vector(cx - halfW, cy - plateT, 0 * millimeter),
+                "corner2" : vector(cx + halfW, cy,           lowerH)
         });
 
         // 2. Continuous Profiled Book Shelf + Front Lip + 4mm Inside Root Chamfer
         var shelfSketch = newSketchOnPlane(context, id + "shelfSketch", {
-                "sketchPlane" : plane(vector(cx - half_w, cy, 0 * millimeter), vector(1, 0, 0), vector(0, 1, 0))
+                "sketchPlane" : plane(vector(cx - halfW, cy, 0 * millimeter), vector(1, 0, 0), vector(0, 1, 0))
         });
 
-        var lip_top_z = shelf_t + lip_h;                // 16mm
-        var r_lip     = 2.4 * millimeter;               // Smooth 2.4mm front-top bullnose radius
-        var arc_off   = r_lip * (1 - cos(45 * degree)); // Exact 45-deg tangent point
+        var lipTopZ = shelfT + lipH;                // 16mm
+        var rLip     = 2.4 * millimeter;               // Smooth 2.4mm front-top bullnose radius
+        var arcOff   = rLip * (1 - cos(45 * degree)); // Exact 45-deg tangent point
 
-        var s1 = vector(-plate_t,                  0 * millimeter);
-        var s2 = vector(y_front_local,             0 * millimeter);
-        var s3 = vector(y_front_local,             lip_top_z - r_lip);
-        var sM = vector(y_front_local + arc_off,   lip_top_z - arc_off);
-        var s4 = vector(y_front_local + r_lip,     lip_top_z);
-        var s5 = vector(y_front_local + lip_t,     lip_top_z);
-        var s6 = vector(y_front_local + lip_t,     shelf_t);
-        var s7 = vector(-plate_t - 4 * millimeter, shelf_t);
-        var s8 = vector(-plate_t,                  shelf_t + 4 * millimeter);
+        var s1 = vector(-plateT,                  0 * millimeter);
+        var s2 = vector(yFrontLocal,             0 * millimeter);
+        var s3 = vector(yFrontLocal,             lipTopZ - rLip);
+        var sM = vector(yFrontLocal + arcOff,   lipTopZ - arcOff);
+        var s4 = vector(yFrontLocal + rLip,     lipTopZ);
+        var s5 = vector(yFrontLocal + lipT,     lipTopZ);
+        var s6 = vector(yFrontLocal + lipT,     shelfT);
+        var s7 = vector(-plateT - 4 * millimeter, shelfT);
+        var s8 = vector(-plateT,                  shelfT + 4 * millimeter);
 
         skLineSegment(shelfSketch, "sBot",      { "start" : s1, "end" : s2 });
         skLineSegment(shelfSketch, "sFront",    { "start" : s2, "end" : s3 });
@@ -837,13 +837,13 @@ export const onStageMusicDesk3ADual = defineFeature(function(context is Context,
                 "entities" : qSketchRegion(id + "shelfSketch"),
                 "direction" : vector(1, 0, 0),
                 "endBound" : BoundingType.BLIND,
-                "endDepth" : desk_w
+                "endDepth" : deskW
         });
 
         // 3. Full-Width Lower Rear Torsion Spine (Y = cy to cy + 6mm, Z = 0 to 50mm)
         fCuboid(context, id + "rearSpine", {
-                "corner1" : vector(cx - half_w, cy,                  0 * millimeter),
-                "corner2" : vector(cx + half_w, cy + 6 * millimeter, 50 * millimeter)
+                "corner1" : vector(cx - halfW, cy,                  0 * millimeter),
+                "corner2" : vector(cx + halfW, cy + 6 * millimeter, 50 * millimeter)
         });
 
         // 4. Union the Main Desk Shell First
@@ -867,37 +867,37 @@ export const onStageMusicDesk3ADual = defineFeature(function(context is Context,
         }
 
         // 6. Two Vertical Female Dovetail Guide Housings (X = cx +/- 75mm, Z = 50mm to 180mm)
-        var guide_half_w = 16 * millimeter;
-        var guide_depth  = 14 * millimeter;
+        var guideHalfW = 16 * millimeter;
+        var guideDepth  = 14 * millimeter;
         var addBodies    = [shellBody];
         var gIdx = 0;
 
-        for (var rx in rail_x_offsets)
+        for (var rx in railXOffsets)
         {
             gIdx += 1;
             fCuboid(context, id + ("guideBlock" ~ gIdx), {
-                    "corner1" : vector(cx + rx - guide_half_w, cy,               50 * millimeter),
-                    "corner2" : vector(cx + rx + guide_half_w, cy + guide_depth, lower_h)
+                    "corner1" : vector(cx + rx - guideHalfW, cy,               50 * millimeter),
+                    "corner2" : vector(cx + rx + guideHalfW, cy + guideDepth, lowerH)
             });
             addBodies = append(addBodies, qCreatedBy(id + ("guideBlock" ~ gIdx), EntityType.BODY));
         }
 
         // 7. Dual Left & Right Angled Heavy-Duty Riser Receiver Blocks (at X = cx +/- 75mm)
-        var rec_half_w = 32 * millimeter;
-        var rec_height = 95 * millimeter;
-        var base_depth = 26 * millimeter + (rec_height * sin(desk_angle));
+        var recHalfW = 32 * millimeter;
+        var recHeight = 95 * millimeter;
+        var baseDepth = 26 * millimeter + (recHeight * sin(deskAngle));
 
         var rIdx = 0;
-        for (var roff in riser_x_offsets)
+        for (var roff in riserXOffsets)
         {
             rIdx += 1;
             var wedgeSk = newSketchOnPlane(context, id + ("wedgeSk" ~ rIdx), {
-                    "sketchPlane" : plane(vector(cx + roff - rec_half_w, cy, 0 * millimeter), vector(1, 0, 0), vector(0, 1, 0))
+                    "sketchPlane" : plane(vector(cx + roff - recHalfW, cy, 0 * millimeter), vector(1, 0, 0), vector(0, 1, 0))
             });
             var w1 = vector(0 * millimeter, 0 * millimeter);
-            var w2 = vector(base_depth,     0 * millimeter);
-            var w3 = vector(base_depth - (rec_height * sin(desk_angle)), rec_height * cos(desk_angle));
-            var w4 = vector(0 * millimeter, rec_height * cos(desk_angle));
+            var w2 = vector(baseDepth,     0 * millimeter);
+            var w3 = vector(baseDepth - (recHeight * sin(deskAngle)), recHeight * cos(deskAngle));
+            var w4 = vector(0 * millimeter, recHeight * cos(deskAngle));
 
             skLineSegment(wedgeSk, "wBot",   { "start" : w1, "end" : w2 });
             skLineSegment(wedgeSk, "wBack",  { "start" : w2, "end" : w3 });
@@ -909,7 +909,7 @@ export const onStageMusicDesk3ADual = defineFeature(function(context is Context,
                     "entities" : qSketchRegion(id + ("wedgeSk" ~ rIdx)),
                     "direction" : vector(1, 0, 0),
                     "endBound" : BoundingType.BLIND,
-                    "endDepth" : rec_half_w * 2
+                    "endDepth" : recHalfW * 2
             });
             addBodies = append(addBodies, qCreatedBy(id + ("extReceiver" ~ rIdx), EntityType.BODY));
         }
@@ -921,32 +921,32 @@ export const onStageMusicDesk3ADual = defineFeature(function(context is Context,
         });
 
         // 8. Cut Dual Angled Riser Female Dovetails + Dual Vertical Slider Female Dovetails + Detent Pin Holes
-        var u_slide = vector(0, -sin(desk_angle), cos(desk_angle));
-        var cornerOrigin = vector(cx, cy + base_depth, 0 * millimeter) - (8 * millimeter) * u_slide;
+        var uSlide = vector(0, -sin(deskAngle), cos(deskAngle));
+        var cornerOrigin = vector(cx, cy + baseDepth, 0 * millimeter) - (8 * millimeter) * uSlide;
 
         var doveCutSketch = newSketchOnPlane(context, id + "doveCutSketch", {
-                "sketchPlane" : plane(cornerOrigin, u_slide, vector(1, 0, 0))
+                "sketchPlane" : plane(cornerOrigin, uSlide, vector(1, 0, 0))
         });
 
-        var d_outer   = 2 * millimeter;
-        var d_inner   = -(18 * millimeter) - tol;
-        var half_neck = (13.0 * millimeter) + tol;
-        var half_wide = (19.0 * millimeter) + tol;
+        var dOuter   = 2 * millimeter;
+        var dInner   = -(18 * millimeter) - tol;
+        var halfNeck = (13.0 * millimeter) + tol;
+        var halfWide = (19.0 * millimeter) + tol;
 
         var dcIdx = 0;
-        for (var roff in riser_x_offsets)
+        for (var roff in riserXOffsets)
         {
             dcIdx += 1;
-            skLineSegment(doveCutSketch, "dBack" ~ dcIdx,  { "start" : vector(roff - half_neck, d_outer), "end" : vector(roff + half_neck, d_outer) });
-            skLineSegment(doveCutSketch, "dRight" ~ dcIdx, { "start" : vector(roff + half_neck, d_outer), "end" : vector(roff + half_wide, d_inner) });
-            skLineSegment(doveCutSketch, "dFront" ~ dcIdx, { "start" : vector(roff + half_wide, d_inner), "end" : vector(roff - half_wide, d_inner) });
-            skLineSegment(doveCutSketch, "dLeft" ~ dcIdx,  { "start" : vector(roff - half_wide, d_inner), "end" : vector(roff - half_neck, d_outer) });
+            skLineSegment(doveCutSketch, "dBack" ~ dcIdx,  { "start" : vector(roff - halfNeck, dOuter), "end" : vector(roff + halfNeck, dOuter) });
+            skLineSegment(doveCutSketch, "dRight" ~ dcIdx, { "start" : vector(roff + halfNeck, dOuter), "end" : vector(roff + halfWide, dInner) });
+            skLineSegment(doveCutSketch, "dFront" ~ dcIdx, { "start" : vector(roff + halfWide, dInner), "end" : vector(roff - halfWide, dInner) });
+            skLineSegment(doveCutSketch, "dLeft" ~ dcIdx,  { "start" : vector(roff - halfWide, dInner), "end" : vector(roff - halfNeck, dOuter) });
         }
         skSolve(doveCutSketch);
 
         opExtrude(context, id + "extDoveCut", {
                 "entities" : qSketchRegion(id + "doveCutSketch"),
-                "direction" : u_slide,
+                "direction" : uSlide,
                 "endBound" : BoundingType.BLIND,
                 "endDepth" : 79 * millimeter
         });
@@ -955,25 +955,25 @@ export const onStageMusicDesk3ADual = defineFeature(function(context is Context,
                 "sketchPlane" : plane(vector(cx, cy, 50 * millimeter), vector(0, 0, 1), vector(1, 0, 0))
         });
 
-        var s_y_out  = guide_depth + (1 * millimeter);
-        var s_y_in   = (5 * millimeter) - slide_tol;
-        var s_h_neck = (6 * millimeter) + slide_tol;
-        var s_h_wide = (9 * millimeter) + slide_tol;
+        var sYOut  = guideDepth + (1 * millimeter);
+        var sYIn   = (5 * millimeter) - slideTol;
+        var sHNeck = (6 * millimeter) + slideTol;
+        var sHWide = (9 * millimeter) + slideTol;
 
         var lockTools = [];
         var sIdx = 0;
-        for (var rx in rail_x_offsets)
+        for (var rx in railXOffsets)
         {
             sIdx += 1;
-            skLineSegment(femSlideSk, "fsB" ~ sIdx, { "start" : vector(rx - s_h_neck, s_y_out), "end" : vector(rx + s_h_neck, s_y_out) });
-            skLineSegment(femSlideSk, "fsR" ~ sIdx, { "start" : vector(rx + s_h_neck, s_y_out), "end" : vector(rx + s_h_wide, s_y_in) });
-            skLineSegment(femSlideSk, "fsF" ~ sIdx, { "start" : vector(rx + s_h_wide, s_y_in),  "end" : vector(rx - s_h_wide, s_y_in) });
-            skLineSegment(femSlideSk, "fsL" ~ sIdx, { "start" : vector(rx - s_h_wide, s_y_in),  "end" : vector(rx - s_h_neck, s_y_out) });
+            skLineSegment(femSlideSk, "fsB" ~ sIdx, { "start" : vector(rx - sHNeck, sYOut), "end" : vector(rx + sHNeck, sYOut) });
+            skLineSegment(femSlideSk, "fsR" ~ sIdx, { "start" : vector(rx + sHNeck, sYOut), "end" : vector(rx + sHWide, sYIn) });
+            skLineSegment(femSlideSk, "fsF" ~ sIdx, { "start" : vector(rx + sHWide, sYIn),  "end" : vector(rx - sHWide, sYIn) });
+            skLineSegment(femSlideSk, "fsL" ~ sIdx, { "start" : vector(rx - sHWide, sYIn),  "end" : vector(rx - sHNeck, sYOut) });
 
             fCylinder(context, id + ("baseDetentHole" ~ sIdx), {
-                "bottomCenter" : vector(cx + rx - guide_half_w - (2 * millimeter), cy + 9.5 * millimeter, 160 * millimeter),
-                "topCenter"    : vector(cx + rx + guide_half_w + (2 * millimeter), cy + 9.5 * millimeter, 160 * millimeter),
-                "radius"       : m3_clear / 2
+                "bottomCenter" : vector(cx + rx - guideHalfW - (2 * millimeter), cy + 9.5 * millimeter, 160 * millimeter),
+                "topCenter"    : vector(cx + rx + guideHalfW + (2 * millimeter), cy + 9.5 * millimeter, 160 * millimeter),
+                "radius"       : m3Clear / 2
             });
             lockTools = append(lockTools, qCreatedBy(id + ("baseDetentHole" ~ sIdx), EntityType.BODY));
         }
@@ -1009,28 +1009,28 @@ export const onStageMusicDesk3B = defineFeature(function(context is Context, id 
     }
     {
         // 1. Pull variables from your Variable Table
-        var m3_clear = getVar(context, "m3_clear", 3.4 * millimeter);
+        var m3Clear = getVar(context, "m3_clear", 3.4 * millimeter);
 
         // Placed side-by-side at X = 500mm (and resting on Z = 0mm!) so it is 100% separate from 3A!
         var cx = 500 * millimeter;
         var cy = 0 * millimeter;
 
-        var desk_w      = 240 * millimeter;
-        var half_w      = desk_w / 2;       // 120mm
-        var plate_t     = 6 * millimeter;
-        var guide_depth = 14 * millimeter;
+        var deskW      = 240 * millimeter;
+        var halfW      = deskW / 2;       // 120mm
+        var plateT     = 6 * millimeter;
+        var guideDepth = 14 * millimeter;
 
-        var runner_bot_z = 0 * millimeter;   // Runners start right on the Z = 0 floor for easy viewing & slicing
-        var head_bot_z   = 130 * millimeter; // 130mm of exposed runner below the 60mm tall upper faceplate
-        var head_h       = 60 * millimeter;
-        var head_top_z   = head_bot_z + head_h; // Total Part 3B height = 190mm
+        var runnerBotZ = 0 * millimeter;   // Runners start right on the Z = 0 floor for easy viewing & slicing
+        var headBotZ   = 130 * millimeter; // 130mm of exposed runner below the 60mm tall upper faceplate
+        var headH       = 60 * millimeter;
+        var headTopZ   = headBotZ + headH; // Total Part 3B height = 190mm
 
-        var rail_x_offsets = [-75 * millimeter, 75 * millimeter];
+        var railXOffsets = [-75 * millimeter, 75 * millimeter];
 
         // 2. Upper Music Desk Plate (240mm wide x 6mm thick x 60mm tall, Z = 130mm to 190mm)
         fCuboid(context, id + "upperPlate", {
-                "corner1" : vector(cx - half_w, cy - plate_t, head_bot_z),
-                "corner2" : vector(cx + half_w, cy,           head_top_z)
+                "corner1" : vector(cx - halfW, cy - plateT, headBotZ),
+                "corner2" : vector(cx + halfW, cy,           headTopZ)
         });
 
         // Round the 4 vertical (Z-parallel) side edges of the 6mm upper plate while pristine!
@@ -1045,25 +1045,25 @@ export const onStageMusicDesk3B = defineFeature(function(context is Context, id 
 
         // 3. Dual Male Dovetail Runners (At X = +/-75mm, extending from Z = 0mm to Z = 143mm)
         var maleSlideSk = newSketchOnPlane(context, id + "maleSlideSk", {
-                "sketchPlane" : plane(vector(cx, cy, runner_bot_z), vector(0, 0, 1), vector(1, 0, 0))
+                "sketchPlane" : plane(vector(cx, cy, runnerBotZ), vector(0, 0, 1), vector(1, 0, 0))
         });
 
-        var m_y_back  = guide_depth;     // +14mm
-        var m_y_neck  = 5 * millimeter;  // +5mm
-        var m_y_front = 0 * millimeter;  // 0mm (connects directly to the back of upperPlate from Z = 130 to 143mm!)
-        var m_h_neck  = 6 * millimeter;  // 12mm total neck width at Y = +14mm
-        var m_h_wide  = 9 * millimeter;  // 18mm total flare width at Y = +5mm
+        var mYBack  = guideDepth;     // +14mm
+        var mYNeck  = 5 * millimeter;  // +5mm
+        var mYFront = 0 * millimeter;  // 0mm (connects directly to the back of upperPlate from Z = 130 to 143mm!)
+        var mHNeck  = 6 * millimeter;  // 12mm total neck width at Y = +14mm
+        var mHWide  = 9 * millimeter;  // 18mm total flare width at Y = +5mm
 
         var mIdx = 0;
-        for (var rx in rail_x_offsets)
+        for (var rx in railXOffsets)
         {
             mIdx += 1;
-            var mp1 = vector(rx - m_h_wide, m_y_front);
-            var mp2 = vector(rx + m_h_wide, m_y_front);
-            var mp3 = vector(rx + m_h_wide, m_y_neck);
-            var mp4 = vector(rx + m_h_neck, m_y_back);
-            var mp5 = vector(rx - m_h_neck, m_y_back);
-            var mp6 = vector(rx - m_h_wide, m_y_neck);
+            var mp1 = vector(rx - mHWide, mYFront);
+            var mp2 = vector(rx + mHWide, mYFront);
+            var mp3 = vector(rx + mHWide, mYNeck);
+            var mp4 = vector(rx + mHNeck, mYBack);
+            var mp5 = vector(rx - mHNeck, mYBack);
+            var mp6 = vector(rx - mHWide, mYNeck);
 
             skLineSegment(maleSlideSk, "ms1_" ~ mIdx, { "start" : mp1, "end" : mp2 });
             skLineSegment(maleSlideSk, "ms2_" ~ mIdx, { "start" : mp2, "end" : mp3 });
@@ -1078,25 +1078,25 @@ export const onStageMusicDesk3B = defineFeature(function(context is Context, id 
                 "entities" : qSketchRegion(id + "maleSlideSk"),
                 "direction" : vector(0, 0, 1),
                 "endBound" : BoundingType.BLIND,
-                "endDepth" : (head_top_z - 47 * millimeter) - runner_bot_z
+                "endDepth" : (headTopZ - 47 * millimeter) - runnerBotZ
         });
 
         // 4. Part 4 Horizontal Clamp Accessory Rail on Top Back of Part 3B (Z = 150mm to 178mm)
         // Inset by 3mm on Left & Right ends (X = cx - 117mm to cx + 117mm) so the rail ends sit cleanly
         // inside the 2.8mm rounded vertical back edge of upperPlate without overhanging in mid-air!
-        var rail_inset  = 3 * millimeter;
-        var rail_base_z = head_top_z - (40 * millimeter);
+        var railInset  = 3 * millimeter;
+        var railBaseZ = headTopZ - (40 * millimeter);
         var railSketch  = newSketchOnPlane(context, id + "railSketch", {
-                "sketchPlane" : plane(vector(cx - half_w + rail_inset, cy, 0 * millimeter), vector(1, 0, 0), vector(0, 1, 0))
+                "sketchPlane" : plane(vector(cx - halfW + railInset, cy, 0 * millimeter), vector(1, 0, 0), vector(0, 1, 0))
         });
-        var u1 = vector(0 * millimeter,  rail_base_z + 4 * millimeter);
-        var u2 = vector(6 * millimeter,  rail_base_z + 4 * millimeter);
-        var u3 = vector(6 * millimeter,  rail_base_z);
-        var u4 = vector(14 * millimeter, rail_base_z + 4 * millimeter);
-        var u5 = vector(14 * millimeter, rail_base_z + 24 * millimeter);
-        var u6 = vector(6 * millimeter,  rail_base_z + 28 * millimeter);
-        var u7 = vector(6 * millimeter,  rail_base_z + 24 * millimeter);
-        var u8 = vector(0 * millimeter,  rail_base_z + 24 * millimeter);
+        var u1 = vector(0 * millimeter,  railBaseZ + 4 * millimeter);
+        var u2 = vector(6 * millimeter,  railBaseZ + 4 * millimeter);
+        var u3 = vector(6 * millimeter,  railBaseZ);
+        var u4 = vector(14 * millimeter, railBaseZ + 4 * millimeter);
+        var u5 = vector(14 * millimeter, railBaseZ + 24 * millimeter);
+        var u6 = vector(6 * millimeter,  railBaseZ + 28 * millimeter);
+        var u7 = vector(6 * millimeter,  railBaseZ + 24 * millimeter);
+        var u8 = vector(0 * millimeter,  railBaseZ + 24 * millimeter);
 
         skLineSegment(railSketch, "uL1", { "start" : u1, "end" : u2 });
         skLineSegment(railSketch, "uL2", { "start" : u2, "end" : u3 });
@@ -1112,7 +1112,7 @@ export const onStageMusicDesk3B = defineFeature(function(context is Context, id 
                 "entities" : qSketchRegion(id + "railSketch"),
                 "direction" : vector(1, 0, 0),
                 "endBound" : BoundingType.BLIND,
-                "endDepth" : desk_w - (2 * rail_inset)
+                "endDepth" : deskW - (2 * railInset)
         });
 
         // Union all Part 3B Upper Extension components into a single solid body
@@ -1128,17 +1128,17 @@ export const onStageMusicDesk3B = defineFeature(function(context is Context, id 
         // 5. Series of 9 Vertical Detent Pin Holes Spaced Every 15mm Along Both Male Dovetail Runners!
         var runnerHoleTools = [];
         var hIdx = 0;
-        for (var rx in rail_x_offsets)
+        for (var rx in railXOffsets)
         {
             for (var k = 0; k < 9; k += 1)
             {
                 hIdx += 1;
-                var hole_z = runner_bot_z + (110 * millimeter) - (k * 15 * millimeter);
+                var holeZ = runnerBotZ + (110 * millimeter) - (k * 15 * millimeter);
 
                 fCylinder(context, id + ("runnerDetent" ~ hIdx), {
-                        "bottomCenter" : vector(cx + rx - 12 * millimeter, cy + 9.5 * millimeter, hole_z),
-                        "topCenter"    : vector(cx + rx + 12 * millimeter, cy + 9.5 * millimeter, hole_z),
-                        "radius"       : m3_clear / 2
+                        "bottomCenter" : vector(cx + rx - 12 * millimeter, cy + 9.5 * millimeter, holeZ),
+                        "topCenter"    : vector(cx + rx + 12 * millimeter, cy + 9.5 * millimeter, holeZ),
+                        "radius"       : m3Clear / 2
                 });
                 runnerHoleTools = append(runnerHoleTools, qCreatedBy(id + ("runnerDetent" ~ hIdx), EntityType.BODY));
             }
@@ -1200,8 +1200,8 @@ export const onStagePageClamps = defineFeature(function(context is Context, id i
     }
     {
         var tol      = getVar(context, "tol", 0.3 * millimeter);
-        var m3_clear = getVar(context, "m3_clear", 3.4 * millimeter);
-        var m3_nut   = getVar(context, "m3_nut", 5.6 * millimeter);
+        var m3Clear = getVar(context, "m3_clear", 3.4 * millimeter);
+        var m3Nut   = getVar(context, "m3_nut", 5.6 * millimeter);
 
         // Placed starting at X = 380mm (cleanly to the right of Part 3's X = 350mm edge)
         // All variants are generated at their true Z-height (around Z = 140..180mm) to show exact desk alignment!
@@ -1319,7 +1319,7 @@ export const onStagePageClamps = defineFeature(function(context is Context, id i
         fCylinder(context, id + "b1Hole", {
                 "bottomCenter" : vector(xB1,       pivY, pivZ),
                 "topCenter"    : vector(xB1 + wB1, pivY, pivZ),
-                "radius"       : m3_clear / 2
+                "radius"       : m3Clear / 2
         });
 
         opBoolean(context, id + "subB1", {
@@ -1337,37 +1337,37 @@ export const onStagePageClamps = defineFeature(function(context is Context, id i
         // Uses 6.5mm radius circular ears + tangent top webs so it rotates with 1.5mm
         // radial clearance above B1's floor AND prints upside-down on a flat Z = 198mm face!
         var xB2        = 735 * millimeter;
-        var clevis_gap = 14 * millimeter + (2 * tol); // 14.6mm inner gap to straddle the 14mm B1 turret
-        var ear_w      = 4.5 * millimeter;            // 4.5mm thick left and right hinge ears
-        var half_gap   = clevis_gap / 2;              // 7.3mm
-        var ear_rad    = 6.5 * millimeter;            // 6.5mm radius (leaves 1.5mm clearance above Z = 183mm step!)
+        var clevisGap = 14 * millimeter + (2 * tol); // 14.6mm inner gap to straddle the 14mm B1 turret
+        var earW      = 4.5 * millimeter;            // 4.5mm thick left and right hinge ears
+        var halfGap   = clevisGap / 2;              // 7.3mm
+        var earRad    = 6.5 * millimeter;            // 6.5mm radius (leaves 1.5mm clearance above Z = 183mm step!)
 
         // 1. Left & Right Circular Hinge Drums (Coaxial with pivY = 7mm, pivZ = 191mm)
         fCylinder(context, id + "b2EarCylL", {
-                "bottomCenter" : vector(xB2 - half_gap - ear_w, pivY, pivZ),
-                "topCenter"    : vector(xB2 - half_gap,         pivY, pivZ),
-                "radius"       : ear_rad
+                "bottomCenter" : vector(xB2 - halfGap - earW, pivY, pivZ),
+                "topCenter"    : vector(xB2 - halfGap,         pivY, pivZ),
+                "radius"       : earRad
         });
         fCylinder(context, id + "b2EarCylR", {
-                "bottomCenter" : vector(xB2 + half_gap,         pivY, pivZ),
-                "topCenter"    : vector(xB2 + half_gap + ear_w, pivY, pivZ),
-                "radius"       : ear_rad
+                "bottomCenter" : vector(xB2 + halfGap,         pivY, pivZ),
+                "topCenter"    : vector(xB2 + halfGap + earW, pivY, pivZ),
+                "radius"       : earRad
         });
 
         // 2. Tangent Upper Ear Webs (Connects the circular drums forward to Y = -1mm, flush at Z = 198mm for flat printing)
         fCuboid(context, id + "b2EarWebL", {
-                "corner1" : vector(xB2 - half_gap - ear_w, -1 * millimeter, pivZ),
-                "corner2" : vector(xB2 - half_gap,         pivY,            198 * millimeter)
+                "corner1" : vector(xB2 - halfGap - earW, -1 * millimeter, pivZ),
+                "corner2" : vector(xB2 - halfGap,         pivY,            198 * millimeter)
         });
         fCuboid(context, id + "b2EarWebR", {
-                "corner1" : vector(xB2 + half_gap,         -1 * millimeter, pivZ),
-                "corner2" : vector(xB2 + half_gap + ear_w, pivY,            198 * millimeter)
+                "corner1" : vector(xB2 + halfGap,         -1 * millimeter, pivZ),
+                "corner2" : vector(xB2 + halfGap + earW, pivY,            198 * millimeter)
         });
 
         // 3. Forward Reach Bridge (Starts at Y = -1mm -> 8mm away from pivot so it never touches the 7mm radius B1 turret!)
         fCuboid(context, id + "b2Arm", {
-                "corner1" : vector(xB2 - half_gap - ear_w, -30 * millimeter, 192 * millimeter),
-                "corner2" : vector(xB2 + half_gap + ear_w,  -1 * millimeter, 198 * millimeter)
+                "corner1" : vector(xB2 - halfGap - earW, -30 * millimeter, 192 * millimeter),
+                "corner2" : vector(xB2 + halfGap + earW,  -1 * millimeter, 198 * millimeter)
         });
 
         // 4. Downward Page-Holding Batwing Paddle at Y = -30mm to -25mm (50mm wide x 36mm tall, Z = 162..198mm)
@@ -1392,15 +1392,15 @@ export const onStagePageClamps = defineFeature(function(context is Context, id i
         fCylinder(context, id + "b2PinHole", {
                 "bottomCenter" : vector(xB2 - 15 * millimeter, pivY, pivZ),
                 "topCenter"    : vector(xB2 + 15 * millimeter, pivY, pivZ),
-                "radius"       : m3_clear / 2
+                "radius"       : m3Clear / 2
         });
 
         var b2NutSk = newSketchOnPlane(context, id + "b2NutSk", {
-                "sketchPlane" : plane(vector(xB2 + half_gap + ear_w, pivY, pivZ), vector(1, 0, 0), vector(0, 1, 0))
+                "sketchPlane" : plane(vector(xB2 + halfGap + earW, pivY, pivZ), vector(1, 0, 0), vector(0, 1, 0))
         });
         skRegularPolygon(b2NutSk, "b2Hex", {
                 "center" : vector(0 * millimeter, 0 * millimeter),
-                "firstVertex" : vector(0 * millimeter, m3_nut / (2 * cos(30 * degree))),
+                "firstVertex" : vector(0 * millimeter, m3Nut / (2 * cos(30 * degree))),
                 "sides" : 6
         });
         skSolve(b2NutSk);
@@ -1483,17 +1483,17 @@ export const onStageDetentPins = defineFeature(function(context is Context, id i
     {
     }
     {
-        var m3_clear = getVar(context, "m3_clear", 3.4 * millimeter);
+        var m3Clear = getVar(context, "m3_clear", 3.4 * millimeter);
         var tol      = getVar(context, "tol", 0.3 * millimeter);
 
         // Pin diameter is sized 0.35mm smaller than the 3.4mm hole (approx 3.05mm) for an easy, non-binding slip fit
-        var pin_rad  = (m3_clear - tol - 0.05 * millimeter) / 2;
+        var pinRad  = (m3Clear - tol - 0.05 * millimeter) / 2;
         
         // Flattening the top and bottom (2.4mm height) creates a D-profile / double-flat shaft:
         // 1. It prints completely flat on the build plate with zero supports and zero bed-adhesion issues!
         // 2. Continuous perimeter wall loops run the entire 38mm length of the shaft for maximum shear strength!
-        var flat_h     = 2.4 * millimeter; 
-        var shaft_len  = 38 * millimeter; // Passes cleanly through the 32mm wide guide block in double-shear
+        var flatH     = 2.4 * millimeter; 
+        var shaftLen  = 38 * millimeter; // Passes cleanly through the 32mm wide guide block in double-shear
 
         var xBase = 825 * millimeter;
         var yOffsets = [0 * millimeter];
@@ -1506,21 +1506,21 @@ export const onStageDetentPins = defineFeature(function(context is Context, id i
             // 1. Round Pin Shaft along X-axis (X = 825mm to 863mm)
             fCylinder(context, id + ("shaftCyl" ~ idx), {
                     "bottomCenter" : vector(xBase, yOff, 0 * millimeter),
-                    "topCenter"    : vector(xBase + shaft_len, yOff, 0 * millimeter),
-                    "radius"       : pin_rad
+                    "topCenter"    : vector(xBase + shaftLen, yOff, 0 * millimeter),
+                    "radius"       : pinRad
             });
 
             // 2. Bounding Box to Flatten Top & Bottom of Shaft (Z = -1.2mm to +1.2mm) & Bevel Tip
             var boundSk = newSketchOnPlane(context, id + ("boundSk" ~ idx), {
                     "sketchPlane" : plane(vector(xBase, yOff - 10 * millimeter, 0 * millimeter), vector(0, -1, 0), vector(1, 0, 0))
             });
-            var h_z = flat_h / 2; // 1.2mm
-            var b1 = vector(0 * millimeter,               -h_z);
-            var b2 = vector(shaft_len - 1.5 * millimeter, -h_z);
-            var b3 = vector(shaft_len,                    -0.5 * millimeter); // Tapered lead-in tip
-            var b4 = vector(shaft_len,                     0.5 * millimeter);
-            var b5 = vector(shaft_len - 1.5 * millimeter,  h_z);
-            var b6 = vector(0 * millimeter,                h_z);
+            var hZ = flatH / 2; // 1.2mm
+            var b1 = vector(0 * millimeter,               -hZ);
+            var b2 = vector(shaftLen - 1.5 * millimeter, -hZ);
+            var b3 = vector(shaftLen,                    -0.5 * millimeter); // Tapered lead-in tip
+            var b4 = vector(shaftLen,                     0.5 * millimeter);
+            var b5 = vector(shaftLen - 1.5 * millimeter,  hZ);
+            var b6 = vector(0 * millimeter,                hZ);
 
             skLineSegment(boundSk, "bL1" ~ idx, { "start" : b1, "end" : b2 });
             skLineSegment(boundSk, "bL2" ~ idx, { "start" : b2, "end" : b3 });
@@ -1548,14 +1548,14 @@ export const onStageDetentPins = defineFeature(function(context is Context, id i
 
             // 3. Ergonomic T-Handle Grip (14mm long x 18mm wide x 2.4mm thick, flush with top/bottom of shaft!)
             fCuboid(context, id + ("tHandle" ~ idx), {
-                    "corner1" : vector(xBase - 14 * millimeter, yOff - 9 * millimeter, -h_z),
-                    "corner2" : vector(xBase,                   yOff + 9 * millimeter,  h_z)
+                    "corner1" : vector(xBase - 14 * millimeter, yOff - 9 * millimeter, -hZ),
+                    "corner2" : vector(xBase,                   yOff + 9 * millimeter,  hZ)
             });
 
             // 4. Collar Stop Shoulder (6mm wide x 4mm long) so the pin seats cleanly against the guide block wall
             fCuboid(context, id + ("collar" ~ idx), {
-                    "corner1" : vector(xBase,                yOff - 3 * millimeter, -h_z),
-                    "corner2" : vector(xBase + 3 * millimeter, yOff + 3 * millimeter,  h_z)
+                    "corner1" : vector(xBase,                yOff - 3 * millimeter, -hZ),
+                    "corner2" : vector(xBase + 3 * millimeter, yOff + 3 * millimeter,  hZ)
             });
 
             opBoolean(context, id + ("unionPin" ~ idx), {
@@ -1592,23 +1592,23 @@ export const testFitReceiver = defineFeature(function(context is Context, id is 
     }
     {
         var tol        = getVar(context, "tol", 0.3 * millimeter);
-        var desk_angle = getVar(context, "desk_angle", 15 * degree);
+        var deskAngle = getVar(context, "desk_angle", 15 * degree);
         
         var cx = -150 * millimeter;
         var cy = 0 * millimeter;
 
-        var rec_half_w = 32 * millimeter; // 64mm total width
-        var rec_height = 95 * millimeter; // 95mm tall housing
-        var base_depth = 26 * millimeter + (rec_height * sin(desk_angle));
+        var recHalfW = 32 * millimeter; // 64mm total width
+        var recHeight = 95 * millimeter; // 95mm tall housing
+        var baseDepth = 26 * millimeter + (recHeight * sin(deskAngle));
 
         // 1. Build the Solid Angled Housing Block
         var wedgeSketch = newSketchOnPlane(context, id + "wedgeSketch", {
-                "sketchPlane" : plane(vector(cx - rec_half_w, cy, 0 * millimeter), vector(1, 0, 0), vector(0, 1, 0))
+                "sketchPlane" : plane(vector(cx - recHalfW, cy, 0 * millimeter), vector(1, 0, 0), vector(0, 1, 0))
         });
         var w1 = vector(0 * millimeter, 0 * millimeter);
-        var w2 = vector(base_depth,     0 * millimeter);
-        var w3 = vector(base_depth - (rec_height * sin(desk_angle)), rec_height * cos(desk_angle));
-        var w4 = vector(0 * millimeter, rec_height * cos(desk_angle));
+        var w2 = vector(baseDepth,     0 * millimeter);
+        var w3 = vector(baseDepth - (recHeight * sin(deskAngle)), recHeight * cos(deskAngle));
+        var w4 = vector(0 * millimeter, recHeight * cos(deskAngle));
 
         skLineSegment(wedgeSketch, "wBot",   { "start" : w1, "end" : w2 });
         skLineSegment(wedgeSketch, "wBack",  { "start" : w2, "end" : w3 });
@@ -1620,31 +1620,31 @@ export const testFitReceiver = defineFeature(function(context is Context, id is 
                 "entities" : qSketchRegion(id + "wedgeSketch"),
                 "direction" : vector(1, 0, 0),
                 "endBound" : BoundingType.BLIND,
-                "endDepth" : rec_half_w * 2
+                "endDepth" : recHalfW * 2
         });
 
         // 2. Cut the Female Mega-Dovetail Slot + Tolerance
-        var u_slide = vector(0, -sin(desk_angle), cos(desk_angle));
-        var cornerOrigin = vector(cx, cy + base_depth, 0 * millimeter) - (8 * millimeter) * u_slide;
+        var uSlide = vector(0, -sin(deskAngle), cos(deskAngle));
+        var cornerOrigin = vector(cx, cy + baseDepth, 0 * millimeter) - (8 * millimeter) * uSlide;
 
         var doveCutSketch = newSketchOnPlane(context, id + "doveCutSketch", {
-                "sketchPlane" : plane(cornerOrigin, u_slide, vector(1, 0, 0))
+                "sketchPlane" : plane(cornerOrigin, uSlide, vector(1, 0, 0))
         });
 
-        var d_outer   = 2 * millimeter;
-        var d_inner   = -(18 * millimeter) - tol;
-        var half_neck = (13.0 * millimeter) + tol;
-        var half_wide = (19.0 * millimeter) + tol;
+        var dOuter   = 2 * millimeter;
+        var dInner   = -(18 * millimeter) - tol;
+        var halfNeck = (13.0 * millimeter) + tol;
+        var halfWide = (19.0 * millimeter) + tol;
 
-        skLineSegment(doveCutSketch, "dBack",  { "start" : vector(-half_neck, d_outer), "end" : vector( half_neck, d_outer) });
-        skLineSegment(doveCutSketch, "dRight", { "start" : vector( half_neck, d_outer), "end" : vector( half_wide, d_inner) });
-        skLineSegment(doveCutSketch, "dFront", { "start" : vector( half_wide, d_inner), "end" : vector(-half_wide, d_inner) });
-        skLineSegment(doveCutSketch, "dLeft",  { "start" : vector(-half_wide, d_inner), "end" : vector(-half_neck, d_outer) });
+        skLineSegment(doveCutSketch, "dBack",  { "start" : vector(-halfNeck, dOuter), "end" : vector( halfNeck, dOuter) });
+        skLineSegment(doveCutSketch, "dRight", { "start" : vector( halfNeck, dOuter), "end" : vector( halfWide, dInner) });
+        skLineSegment(doveCutSketch, "dFront", { "start" : vector( halfWide, dInner), "end" : vector(-halfWide, dInner) });
+        skLineSegment(doveCutSketch, "dLeft",  { "start" : vector(-halfWide, dInner), "end" : vector(-halfNeck, dOuter) });
         skSolve(doveCutSketch);
 
         opExtrude(context, id + "extDoveCut", {
                 "entities" : qSketchRegion(id + "doveCutSketch"),
-                "direction" : u_slide,
+                "direction" : uSlide,
                 "endBound" : BoundingType.BLIND,
                 "endDepth" : 79 * millimeter
         });
