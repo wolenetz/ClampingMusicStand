@@ -109,7 +109,7 @@ export const onStageLClamp = defineFeature(function(context is Context, id is Id
                 "radius" : 5 * millimeter
         });
 
-        // 2B. Central Dorsal Tension Spine on Part 1A (Y = 20mm to seat_front_y, Z = 11mm to top_z)
+        // 2B. Central Dorsal Tension Spine on Part 1A (Y = 20mm to seatFrontY, Z = 11mm to topZ)
         var spineBotZ = 10 * millimeter + (clampGap / 2); // +11.00mm
         fCuboid(context, id + "armSpine", {
                 "corner1" : vector(-10 * millimeter, 20 * millimeter, spineBotZ),
@@ -344,8 +344,8 @@ export const onStageRiserStem = defineFeature(function(context is Context, id is
 
         // Splitting the 223mm column into two bed-friendly segments:
         // 115mm (2A body) + 108mm (2B body) = 223mm total column height
-        var col_h_2A = 115 * millimeter; // Part 2A total length = 115 + 30 = 145mm
-        var col_h_2B = 108 * millimeter; // Part 2B total length = 108 + 70 = 178mm
+        var colH2A = 115 * millimeter; // Part 2A total length = 115 + 30 = 145mm
+        var colH2B = 108 * millimeter; // Part 2B total length = 108 + 70 = 178mm
 
         var socketSize = pegSize + tol;
         var halfSoc    = socketSize / 2;
@@ -360,7 +360,7 @@ export const onStageRiserStem = defineFeature(function(context is Context, id is
         // 1. Main 40x30x115mm Column Body
         fCuboid(context, id + "col2A", {
                 "corner1" : vector(cxA - halfW, cyA - halfD, 0 * millimeter),
-                "corner2" : vector(cxA + halfW, cyA + halfD, col_h_2A)
+                "corner2" : vector(cxA + halfW, cyA + halfD, colH2A)
         });
 
         opFillet(context, id + "filletCol2A", {
@@ -370,8 +370,8 @@ export const onStageRiserStem = defineFeature(function(context is Context, id is
 
         // 2. Top 20x20x30mm Male Coupling Peg (Z = 115mm to 145mm)
         fCuboid(context, id + "peg2A", {
-                "corner1" : vector(cxA - halfPeg, cyA - halfPeg, col_h_2A),
-                "corner2" : vector(cxA + halfPeg, cyA + halfPeg, col_h_2A + pegH)
+                "corner1" : vector(cxA - halfPeg, cyA - halfPeg, colH2A),
+                "corner2" : vector(cxA + halfPeg, cyA + halfPeg, colH2A + pegH)
         });
 
         opBoolean(context, id + "union2A", {
@@ -422,8 +422,8 @@ export const onStageRiserStem = defineFeature(function(context is Context, id is
 
         // Upper Peg M4 Through-Hole (Z = 115 + 15 = 130mm)
         fCylinder(context, id + "pinCyl2A_Top", {
-                "bottomCenter" : vector(cxA, cyA - (15 * millimeter), col_h_2A + pinZ),
-                "topCenter"    : vector(cxA, cyA + (15 * millimeter), col_h_2A + pinZ),
+                "bottomCenter" : vector(cxA, cyA - (15 * millimeter), colH2A + pinZ),
+                "topCenter"    : vector(cxA, cyA + (15 * millimeter), colH2A + pinZ),
                 "radius"       : m4Clear / 2
         });
 
@@ -451,7 +451,7 @@ export const onStageRiserStem = defineFeature(function(context is Context, id is
         // 1. Main 40x30x108mm Column Body
         fCuboid(context, id + "col2B", {
                 "corner1" : vector(cxB - halfW, cyB - halfD, 0 * millimeter),
-                "corner2" : vector(cxB + halfW, cyB + halfD, col_h_2B)
+                "corner2" : vector(cxB + halfW, cyB + halfD, colH2B)
         });
 
         opFillet(context, id + "filletCol2B", {
@@ -461,7 +461,7 @@ export const onStageRiserStem = defineFeature(function(context is Context, id is
 
         // 2. Mega Male Dovetail Slider (Z = 108mm to 178mm)
         var doveSketch = newSketchOnPlane(context, id + "doveSketch", {
-                "sketchPlane" : plane(vector(cxB, cyB, col_h_2B), vector(0, 0, 1), vector(1, 0, 0))
+                "sketchPlane" : plane(vector(cxB, cyB, colH2B), vector(0, 0, 1), vector(1, 0, 0))
         });
         var yBack    = halfD;                      // +15mm (flush with back face of column for flat printing!)
         var yFront   = halfD - (18 * millimeter);  // -3mm  (18mm thick mega-dovetail)
@@ -610,7 +610,7 @@ export const onStageMusicDesk3A = defineFeature(function(context is Context, id 
         });
 
         // 3. Full-Width Lower Rear Torsion Spine (Y = 0 to +6mm, Z = 0 to 50mm)
-        // Making it full-width (cx - half_w to cx + half_w) makes its left/right faces 100% coplanar with
+        // Making it full-width (cx - halfW to cx + halfW) makes its left/right faces 100% coplanar with
         // backPlate and extShelfLip, so when unioned below, they merge into ONE flat side face with zero steps!
         fCuboid(context, id + "rearSpine", {
                 "corner1" : vector(cx - halfW, cy,                  0 * millimeter),
