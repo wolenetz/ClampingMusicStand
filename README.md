@@ -4,7 +4,7 @@
 
 A 3‑D‑printed music desk that can be assembled in multiple configurations (single‑riser, dual‑riser, full/low‑profile, extra‑tall) to hold sheet music or books. It attaches to an "OnStage" brand keyboard stand, which also happens to be holding my Roland Fantom‑G8.  The music desk is built from OnShape FeatureScript geometry, exported as STL, sliced with OrcaSlicer, and printed on a Prusa CORE One.  The repository contains:
 
-- `OnShapeFeatureScript.js` – FeatureScript that generates the parts.
+- `OnShapeFeatureScript.fs` – FeatureScript that generates the parts.
 - `PrintingGuide.md` – detailed print‑and‑assembly instructions.
 
 This project is specifically designed for use with the Roland Fantom-G8 keyboard, but can be adapted for other keyboards and music stands.
@@ -29,7 +29,7 @@ These tools were used during development of this specific repository. Users are 
 ### High‑Level Architecture
 ```
 ┌───────────────────────────────────────────────────────────────────────────────────────┐
-│  OnShapeFeatureScript.js  →  OnShape  →  Export to STL  →  OrcaSlicer  →  Print       │
+│  OnShapeFeatureScript.fs  →  OnShape  →  Export to STL  →  OrcaSlicer  →  Print       │
 └───────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -39,7 +39,6 @@ These tools were used during development of this specific repository. Users are 
 | Tool | Minimum Version | Notes |
 |------|-----------------|-------|
 | **OnShape** | Any account | Use the free tier for scripting; you’ll need a project to host the script. |
-| **Node.js** | 14.x or newer | Required if you run local FeatureScript tests (optional). |
 | **OrcaSlicer** | Latest release | Download from https://github.com/OrcaSlicer/OrcaSlicer. |
 | **Prusa CORE One** | – | Ensure firmware is up‑to‑date. |
 | **Git** | 2.x | For cloning and version control. |
@@ -52,7 +51,7 @@ These tools were used during development of this specific repository. Users are 
    cd onstage-stand
    ```
 2. **Open in VS Code** and ensure the Continue extension is enabled.
-3. **Open the OnShape project** in your OnShape account and link the `OnShapeFeatureScript.js` file.
+3. **Open the OnShape project** in your OnShape account and link the `OnShapeFeatureScript.fs` file.
 4. **Export STL** from OnShape for each part (see `PrintingGuide.md` for part list).
 5. **Load STL files into OrcaSlicer** and apply the slicer settings from `PrintingGuide.md`.
 6. **Print** on a Prusa CORE One.
@@ -65,7 +64,7 @@ npm install -g onshape-cli
 # Run tests
 onshape test run
 ```
-Ensure the `OnShapeFeatureScript.js` file is in the current working directory.
+Ensure the `OnShapeFeatureScript.fs` file is in the current working directory.
 
 ## 3. Project Structure
 
@@ -74,12 +73,12 @@ Ensure the `OnShapeFeatureScript.js` file is in the current working directory.
 │   └── rules/
 │       └── CONTINUE.md
 ├── PrintingGuide.md            # Print & assembly guide
-├── OnShapeFeatureScript.js  # FeatureScript source
+├── OnShapeFeatureScript.fs  # FeatureScript source
 └── .git/                # Git metadata
 ```
 
 ### Key Files
-- **`OnShapeFeatureScript.js`** – Parametric geometry for the stand.  The script defines parameters such as `part`, `material`, and `orientation`.
+- **`OnShapeFeatureScript.fs`** – Parametric geometry for the stand.  The script defines parameters such as `part`, `material`, and `orientation`.
 - **`PrintingGuide.md`** – Human‑readable instructions for printing and assembling the stand.
 - **`.continue/rules/CONTINUE.md`** – AI‑friendly guide for developers.
 
@@ -88,7 +87,7 @@ Ensure the `OnShapeFeatureScript.js` file is in the current working directory.
 | Step | Description | Tools |
 |------|-------------|-------|
 | **Branch** | Create a feature branch from `main` | Git |
-| **Code** | Edit `OnShapeFeatureScript.js` | VS Code + Continue |
+| **Code** | Edit `OnShapeFeatureScript.fs` | VS Code + Continue |
 | **Test** | Run FeatureScript unit tests | OnShape CLI |
 | **Export** | Generate STL files from OnShape | OnShape UI |
 | **Slice** | Load STL into OrcaSlicer | OrcaSlicer |
@@ -102,18 +101,18 @@ Ensure the `OnShapeFeatureScript.js` file is in the current working directory.
 
 
 ### Coding Conventions
-- Use camelCase for variable names.
-- Keep functions under 200 lines.
-- Document each public function with JSDoc comments.
-- Use the `params` object for user‑exposed parameters.
+- Use camelCase for variable names. (TODO)
+- Keep functions under 200 lines. (TODO)
+- Document each public function with JSDoc comments. (TODO)
+- Use the `params` object for user‑exposed parameters. (TODO)
 
 ### Testing
-- Unit tests should cover geometry creation and parameter validation.
+- Unit tests should cover geometry creation and parameter validation. (TODO)
 - Integration tests can be manual: export STL, slice, and verify dimensions.
 
 ### Build / Deployment
 - There is no build step beyond the FeatureScript export; the output is a set of STL files.
-- To automate exports, you can use the OnShape API to trigger a script run.
+- To automate exports, you can use the OnShape API to trigger a script run. (TODO)
 
 ## 5. Key Concepts
 
@@ -126,7 +125,7 @@ Ensure the `OnShapeFeatureScript.js` file is in the current working directory.
 ## 6. Common Tasks
 
 ### Adding a New Part
-1. Define a new function in `OnShapeFeatureScript.js`.
+1. Define a new function in `OnShapeFeatureScript.fs`.
 2. Add a `params` entry for the part name.
 3. Export the part from OnShape and add it to the slicer.
 4. Update the PrintingGuide.md with orientation and support guidance.
@@ -160,4 +159,4 @@ Ensure the `OnShapeFeatureScript.js` file is in the current working directory.
 
 ---
 
-> **NOTE**: Some sections, such as the exact geometry of the riser or the full list of parameters, are derived from the existing `OnShapeFeatureScript.js`. If you encounter discrepancies, review the script or open a PR to update this guide.
+> **NOTE**: Some sections, such as the exact geometry of the riser or the full list of parameters, are derived from the existing `OnShapeFeatureScript.fs`. If you encounter discrepancies, review the script or open a PR to update this guide.
